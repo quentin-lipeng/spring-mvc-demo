@@ -1,9 +1,15 @@
 package org.quentin.web.config;
 
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration;
+import org.apache.shiro.spring.config.ShiroBeanConfiguration;
+import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
+import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
+import org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -30,10 +36,26 @@ import java.util.List;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = {"org.quentin.web.controller"})
-@Import({MybatisConfig.class, MapperConfig.class})
+@Import({MybatisConfig.class,
+        MapperConfig.class,
+//        ShiroBeanConfiguration.class,
+        ShiroConfig.class,
+        ShiroAnnotationProcessorConfiguration.class,
+        ShiroWebConfiguration.class,
+//        ShiroWebFilterConfiguration.class,
+        ShiroRequestMappingConfig.class
+})
 public class WebMvcConfig implements WebMvcConfigurer {
 
     public static final Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
+
+    // 此方法为@Value注解工作 但加此bean的具体原因还没搞清楚
+    // 目前的作用解决了 配置LifecycleBeanPostProcessor后 就算其bean配置为static注入
+    // 依然解决不了@Value无法获取到值 但加此bean后解决
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     @Bean
     public ViewResolver viewResolver() {
@@ -46,7 +68,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public FreeMarkerConfigurer freeMarkerConfigurer(){
+    public FreeMarkerConfigurer freeMarkerConfigurer() {
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
         configurer.setTemplateLoaderPath("/WEB-INF/freemarker");
         return configurer;
@@ -104,7 +126,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                registry.addResourceHandler("/static/**")
+        registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
     }
 

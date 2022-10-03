@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 /*
@@ -26,22 +27,27 @@ import javax.sql.DataSource;
 //@MapperScan("org.quentin.web.user.mapper")
 @PropertySource("classpath:jdbc.properties")
 public class MybatisConfig {
-    @Value("${datasource.url}")
-    private String url;
+    // 因为shiro配置需要使用LifecycleBeanPostProcessor 但配置其bean会造成@Value失效
+    //@Value annotation does not work with static fields.
+//    @Value("${datasource.url}")
+//    private String url;
+//
+//    @Value("${datasource.username}")
+//    private String user;
+//
+//    @Value("${datasource.password}")
+//    private String password;
+//
+//    @Value("${datasource.driverClassName}")
+//    private String driverClass;
 
-    @Value("${datasource.username}")
-    private String user;
-
-    @Value("${datasource.password}")
-    private String password;
-
-    @Value("${datasource.driverClassName}")
-    private String driverClass;
+    @Resource
+    private DataSource dataSource;
 
     @Bean
     public SqlSessionFactory sqlSessionFactory() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(dataSource());
+        factoryBean.setDataSource(dataSource);
         Configuration configuration = new Configuration();
         configuration.addMapper(AccountMapper.class);
         factoryBean.setConfiguration(configuration);
@@ -50,14 +56,21 @@ public class MybatisConfig {
 
     @Bean
     public DataSourceTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+        return new DataSourceTransactionManager(dataSource);
     }
 
-    private DataSource dataSource() {
+    @Bean
+    public DataSource dataSource(
+            @Value("${datasource.driverClassName}") String driverClass,
+            @Value("${datasource.url}") String url,
+            @Value("${datasource.username}") String username,
+            @Value("${datasource.password}") String password
+    ) {
+//        System.out.println("source = " + driverClass);
         PooledDataSource dataSource = new PooledDataSource();
         dataSource.setDriver(driverClass);
         dataSource.setUrl(url);
-        dataSource.setUsername(user);
+        dataSource.setUsername(username);
         dataSource.setPassword(password);
         return dataSource;
     }

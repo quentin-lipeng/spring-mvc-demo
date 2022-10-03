@@ -118,6 +118,16 @@
             <artifactId>jackson-module-parameter-names</artifactId>
             <version>2.13.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+            <version>1.9.0</version>
+        </dependency>
 
         <!--        <dependency>-->
 <!--            <groupId>com.fasterxml.jackson.core</groupId>-->

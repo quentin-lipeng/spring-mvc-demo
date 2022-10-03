@@ -1,5 +1,7 @@
 package org.quentin.web.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
 import org.quentin.web.service.impl.AccountServiceImpl;
 import org.quentin.web.user.pojo.Account;
 import org.quentin.web.pojo.RetMessage;
@@ -45,11 +47,29 @@ public class AuthController {
     @ResponseBody
     public ResponseEntity<RetMessage> login(@RequestBody Account account) {
         if (account.getUsername() != null) {
-            Account newAccount = accService.getAccByAccName(account.getUsername());
-            logger.info("new acc = " + newAccount);
+            Account accByAccName = accService.getAccByAccName(account.getUsername());
+            logger.info("accByAccName = " + accByAccName.getUsername());
+
+            UsernamePasswordToken token = new UsernamePasswordToken(account.getUsername(), account.getPassword());
+            try {
+                SecurityUtils.getSubject().login(token);
+                return ResponseEntity.ok().eTag("returnMsg").body(new RetMessage().msg("ok"));
+            } catch (UnknownAccountException uae) {
+                //username wasn't in the system, show them an error message?
+                logger.error(uae.getMessage());
+                throw uae;
+            } catch (IncorrectCredentialsException ice) {
+                //password didn't match, try again?
+                logger.error("密码不匹配!!!");
+                return ResponseEntity.status(400).eTag("error").body(new RetMessage().msg("password not correct"));
+            } catch (LockedAccountException lae) {
+                logger.error(lae.getMessage());
+                //account for that username is locked - can't login.  Show them a message?
+            } catch (AuthenticationException ae) {
+                logger.error(ae.getMessage());
+            }
         }
-//        return new RetMessage().status("ok").msg("hello");
-        return ResponseEntity.ok().eTag("returnMsg").body(new RetMessage().status("ok"));
+        return ResponseEntity.status(400).eTag("error").body(new RetMessage().status("error"));
     }
 
     @PostMapping("/get-mes")
