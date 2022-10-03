@@ -1,4 +1,4 @@
-package org.quentin.web.pojo;
+package org.quentin.web.user.pojo;
 
 /**
  * @author:quentin
@@ -9,8 +9,17 @@ public class Account {
     private String username;
     private String password;
     private String accountId;
+    private String salt;
 
     public Account() {
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public String getAccountId() {
@@ -43,6 +52,7 @@ public class Account {
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", accountId='" + accountId + '\'' +
+                ", salt='" + salt + '\'' +
                 '}';
     }
 }

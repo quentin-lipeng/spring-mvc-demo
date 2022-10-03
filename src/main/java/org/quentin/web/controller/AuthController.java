@@ -1,6 +1,7 @@
 package org.quentin.web.controller;
 
-import org.quentin.web.pojo.Account;
+import org.quentin.web.service.impl.AccountServiceImpl;
+import org.quentin.web.user.pojo.Account;
 import org.quentin.web.pojo.RetMessage;
 import org.quentin.web.service.AccountService;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class AuthController {
     /**
      * 也可以使用@Resource(type = AccountServiceImpl.class)
      */
-    @Resource
+    @Resource(type = AccountServiceImpl.class)
     private AccountService accService;
 
     public static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -43,8 +44,9 @@ public class AuthController {
     // 可以直接返回对象并转换为json或其他类型 搭配jackson-databind使用
     @ResponseBody
     public ResponseEntity<RetMessage> login(@RequestBody Account account) {
-        if (account.getUsername() != null){
+        if (account.getUsername() != null) {
             Account newAccount = accService.getAccByAccName(account.getUsername());
+            logger.info("new acc = " + newAccount);
         }
 //        return new RetMessage().status("ok").msg("hello");
         return ResponseEntity.ok().eTag("returnMsg").body(new RetMessage().status("ok"));

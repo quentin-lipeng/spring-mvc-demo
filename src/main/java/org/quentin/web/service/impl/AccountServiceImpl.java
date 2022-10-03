@@ -1,9 +1,7 @@
 package org.quentin.web.service.impl;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.quentin.web.mapper.AccountMapper;
-import org.quentin.web.pojo.Account;
+import org.quentin.web.user.pojo.Account;
 import org.quentin.web.service.AccountService;
 import org.springframework.stereotype.Service;
 
