@@ -9,6 +9,7 @@ import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.quentin.web.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,21 +24,17 @@ import javax.sql.DataSource;
 因为使用了SqlSessionFactory进行mapper的注册
 下面的mapperScan对【no XML配置】 没有作用
  */
-//@ComponentScan(basePackages = {"org.quentin.web.user"})
-//@MapperScan("org.quentin.web.user.mapper")
+@MapperScan("org.quentin.web.mapper")
 @PropertySource("classpath:jdbc.properties")
 public class MybatisConfig {
     // 因为shiro配置需要使用LifecycleBeanPostProcessor 但配置其bean会造成@Value失效
     //@Value annotation does not work with static fields.
 //    @Value("${datasource.url}")
 //    private String url;
-//
 //    @Value("${datasource.username}")
 //    private String user;
-//
 //    @Value("${datasource.password}")
 //    private String password;
-//
 //    @Value("${datasource.driverClassName}")
 //    private String driverClass;
 

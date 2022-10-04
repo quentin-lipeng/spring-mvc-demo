@@ -35,14 +35,14 @@ import java.util.List;
  */
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = {"org.quentin.web.controller"})
+// 其中shiro的配置基本都是shiro提供好的 但由于某些程序报错不得不自己实现
 @Import({MybatisConfig.class,
-        MapperConfig.class,
+//        MapperConfig.class,
 //        ShiroBeanConfiguration.class,
+//        ShiroWebFilterConfiguration.class,
         ShiroConfig.class,
         ShiroAnnotationProcessorConfiguration.class,
         ShiroWebConfiguration.class,
-//        ShiroWebFilterConfiguration.class,
         ShiroRequestMappingConfig.class
 })
 public class WebMvcConfig implements WebMvcConfigurer {

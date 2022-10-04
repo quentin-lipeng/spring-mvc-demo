@@ -13,11 +13,12 @@ import org.springframework.context.annotation.Bean;
 import javax.annotation.Resource;
 
 public class MapperConfig {
-    @Resource
-    private SqlSessionFactory sqlSessionFactory;
-
-    @Bean
-    public AccountMapper accMapper() {
-        return new SqlSessionTemplate(this.sqlSessionFactory).getMapper(AccountMapper.class);
-    }
+//    @Resource
+//    private SqlSessionFactory sqlSessionFactory;
+//
+//    @Bean
+//    public AccountMapper accMapper() {
+//        return new SqlSessionTemplate(this.sqlSessionFactory)
+//                .getMapper(AccountMapper.class);
+//    }
 }
