@@ -1,5 +1,6 @@
 package org.quentin.web.config;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.event.EventBus;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
+
 /**
  * @author:quentin
  * @create: 2022-10-03 12:49
@@ -36,7 +38,12 @@ public class ShiroConfig {
 
     @Bean
     public AccountRealm realm() {
+        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         AccountRealm accountRealm = new AccountRealm();
+
+        credentialsMatcher.setHashAlgorithmName("MD5");
+        credentialsMatcher.setStoredCredentialsHexEncoded(true);
+        accountRealm.setCredentialsMatcher(credentialsMatcher);
         return accountRealm;
     }
 
