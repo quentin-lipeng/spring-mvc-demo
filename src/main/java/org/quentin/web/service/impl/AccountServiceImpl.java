@@ -5,11 +5,13 @@ import org.apache.shiro.authc.*;
 import org.quentin.web.mapper.AccountMapper;
 import org.quentin.web.user.pojo.Account;
 import org.quentin.web.service.AccountService;
+import org.quentin.web.utils.MyBASE64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.UUID;
 
 /**
  * @author:quentin
@@ -37,5 +39,20 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean login(Account ac) {
         return true;
+    }
+
+    @Override
+    public boolean existAccount(String username) {
+        int userCount = accMapper.countAccountByName(username);
+        return userCount > 0;
+    }
+
+    @Override
+    public boolean registerAccount(Account account) {
+        String base = MyBASE64.encryptBASE();
+        int retInt = accMapper.insertAccount(
+                base, account.getUsername(), account.getPassword());
+        logger.info("retInt = " + retInt);
+        return retInt > 0;
     }
 }

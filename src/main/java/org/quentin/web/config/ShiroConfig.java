@@ -1,8 +1,3 @@
-/**
- * @author:quentin
- * @create: 2022-10-03 12:49
- * @Description:
- */
 package org.quentin.web.config;
 
 import org.apache.shiro.cache.CacheManager;
@@ -23,7 +18,11 @@ import org.springframework.context.annotation.Bean;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * @author:quentin
+ * @create: 2022-10-03 12:49
+ * @Description: shiro config file
+ */
 public class ShiroConfig {
 
     @Resource
@@ -50,7 +49,9 @@ public class ShiroConfig {
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
 
+        // 也可以使用map一次性把所有规则注入
         chainDefinition.addPathDefinition("/auth/login", "anon");
+        chainDefinition.addPathDefinition("/auth/register", "anon");
         // all other paths require a logged in user
         chainDefinition.addPathDefinition("/**", "authc");
         return chainDefinition;

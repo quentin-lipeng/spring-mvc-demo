@@ -10,9 +10,19 @@
 <head>
     <meta charset="UTF-8">
     <title>$Title$</title>
+    <script>
+        function logout() {
+            fetch("/auth/logout", {method: "POST"}).then(resp => {
+                return resp.json();
+            }).then(data => {
+                console.log(data);
+            })
+        }
+    </script>
 </head>
 <body>
 <h1>Hello index</h1>
-$END$
+<button onclick="logout()">LogOut</button>
+<#--$END$-->
 </body>
 </html>

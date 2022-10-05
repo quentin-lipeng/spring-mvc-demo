@@ -14,7 +14,7 @@ import java.util.Date;
  * @Description:
  */
 
-public class UUidTest {
+public class UniqueIdTest {
     @Test
     public void uuidTest() throws IOException {
 //        for (int i = 0; i < 10; i++) {

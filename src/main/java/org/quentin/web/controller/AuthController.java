@@ -37,8 +37,6 @@ public class AuthController {
     public String login(HttpServletRequest request, Model model) {
         // request.getParameter 获取前端url显式参数
 //        String id = request.getParameter("id");
-//        Account accByAccId = accService.getAccByAccId(id);
-//        logger.info("account = " + accByAccId);
         return "login";
     }
 
@@ -70,6 +68,31 @@ public class AuthController {
             }
         }
         return ResponseEntity.status(400).eTag("error").body(new RetMessage().status("error"));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<RetMessage> logOut() {
+        // 通过前端cookie中的JSESSIONID确定当前登录对象进行退出
+        SecurityUtils.getSubject().logout();
+        return ResponseEntity.ok().eTag("returnMsg").body(new RetMessage().msg("ok"));
+    }
+
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<RetMessage> register(@RequestBody Account account) {
+        boolean exist = accService.existAccount(account.getUsername());
+        if (!exist) {
+            boolean isSuccess = accService.registerAccount(account);
+            if (isSuccess) {
+                return ResponseEntity.ok().eTag("returnMsg").body(new RetMessage().msg("ok"));
+            }
+        }
+        return ResponseEntity.status(400).eTag("error").body(new RetMessage().status("error"));
+
     }
 
     @PostMapping("/get-mes")

@@ -25,4 +25,12 @@ public interface AccountMapper {
     @ResultMap(value = "accountMap")
     @Select("SELECT * FROM user_account WHERE username = #{username}")
     Account getUserByName(@Param("username") String username);
+
+    @Select("SELECT COUNT(username) FROM user_account where username = #{username}")
+    int countAccountByName(@Param("username") String username);
+
+    @Insert("INSERT INTO user_account(account_id, username, password) VALUES (#{account_id},#{username},#{password})")
+    int insertAccount(@Param("account_id") String account_id,
+                      @Param("username") String username,
+                      @Param("password") String password);
 }

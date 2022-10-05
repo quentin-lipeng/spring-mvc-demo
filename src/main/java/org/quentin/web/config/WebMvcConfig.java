@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -100,8 +101,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer contentNegotiationConfigurer) {
-
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        // 配置接收前端请求的数据类型 但目前不需要进行复写
+//        configurer.mediaType("json", MediaType.APPLICATION_JSON);
     }
 
     @Override
@@ -137,7 +139,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/").setViewName("index");
+        // 如果requestMapping有映射对应的路径那么下面的配置将失效
+//        registry.addViewController("/index").setViewName("index");
     }
 
     @Override

@@ -38,6 +38,7 @@ public class AccountRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        logger.info("doGetAuthorizationInfo === ");
         return null;
     }
 }

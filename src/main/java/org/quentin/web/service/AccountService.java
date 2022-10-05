@@ -13,4 +13,8 @@ public interface AccountService {
     public Account getAccByAccName(String username);
 
     public boolean login(Account ac);
+
+    public boolean existAccount(String username);
+
+    public boolean registerAccount(Account account);
 }

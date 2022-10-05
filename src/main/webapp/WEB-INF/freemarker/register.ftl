@@ -10,8 +10,38 @@
 <head>
     <meta charset="UTF-8">
     <title>$Title$</title>
+    <script>
+        function login() {
+            fetch('/auth/register/',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: document.getElementById('username').value,
+                        password: document.getElementById('password').value
+                    })
+                }).then(resp => {
+                return resp.json();
+            }).then(data => {
+                console.log(data);
+            })
+        }
+    </script>
 </head>
 <body>
-$END$
+
+<h1>register page</h1>
+<form>
+    Username: <label for="username">
+        <input id="username" name="username" type="text"/>
+    </label>
+    Password: <label>
+        <input id="password" name="password" type="password"/>
+    </label><br/><br/>
+    <button type="button" onclick="register()">register</button>
+</form>
+<#--$END$-->
 </body>
 </html>
