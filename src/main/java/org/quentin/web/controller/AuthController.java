@@ -8,6 +8,7 @@ import org.quentin.web.pojo.RetMessage;
 import org.quentin.web.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,14 +45,11 @@ public class AuthController {
     // 可以直接返回对象并转换为json或其他类型 搭配jackson-databind使用
     @ResponseBody
     public ResponseEntity<RetMessage> login(@RequestBody Account account) {
-        if (account.getUsername() != null) {
-            Account accByAccName = accService.getAccByAccName(account.getUsername());
-            logger.info("accByAccName = " + accByAccName.getUsername());
-
+        if (account.getUsername() != null && accService.existAccount(account.getUsername())) {
             UsernamePasswordToken token = new UsernamePasswordToken(account.getUsername(), account.getPassword());
             try {
                 SecurityUtils.getSubject().login(token);
-                return ResponseEntity.ok().eTag("returnMsg").body(new RetMessage().msg("ok"));
+                return ResponseEntity.status(HttpStatus.OK).body(new RetMessage().status("ok").msg("登录成功"));
             } catch (UnknownAccountException uae) {
                 //username wasn't in the system, show them an error message?
                 logger.error(uae.getMessage());
@@ -59,15 +57,18 @@ public class AuthController {
             } catch (IncorrectCredentialsException ice) {
                 //password didn't match, try again?
                 logger.error("密码不匹配!!!");
-                return ResponseEntity.status(400).eTag("error").body(new RetMessage().msg("password not correct"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new RetMessage().status("error").msg("password not correct"));
             } catch (LockedAccountException lae) {
                 logger.error(lae.getMessage());
                 //account for that username is locked - can't login.  Show them a message?
             } catch (AuthenticationException ae) {
+                logger.info("未知错误");
                 logger.error(ae.getMessage());
             }
         }
-        return ResponseEntity.status(400).eTag("error").body(new RetMessage().status("error"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new RetMessage().status("error").msg("用户名错误"));
     }
 
     @PostMapping("/logout")
