@@ -1,6 +1,7 @@
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.core.io.FileSystemResource;
 
 /**
  * @author:quentin
@@ -11,10 +12,12 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class AppTest {
     @Test
     public void appTest() {
-        AnnotationConfigApplicationContext app = new AnnotationConfigApplicationContext();
-        String[] beanDefinitionNames = app.getBeanDefinitionNames();
-        for (String bean : beanDefinitionNames) {
-            System.out.println(bean);
-        }
+        FileSystemResource resource = new FileSystemResource("src/main/resources/jdbc.properties");
+        System.out.println(resource);
+//        AnnotationConfigApplicationContext app = new AnnotationConfigApplicationContext();
+//        String[] beanDefinitionNames = app.getBeanDefinitionNames();
+//        for (String bean : beanDefinitionNames) {
+//            System.out.println(bean);
+//        }
     }
 }

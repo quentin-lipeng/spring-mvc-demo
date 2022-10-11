@@ -11,6 +11,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.quentin.web.mapper.AccountMapper;
+import org.quentin.web.mapper.WebResourceMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -25,7 +26,7 @@ import javax.sql.DataSource;
 下面的mapperScan对【no XML配置】 没有作用
  */
 @MapperScan("org.quentin.web.mapper")
-@PropertySource("classpath:jdbc.properties")
+//@PropertySource("classpath:jdbc.properties")
 public class MybatisConfig {
     // 因为shiro配置需要使用LifecycleBeanPostProcessor 但配置其bean会造成@Value失效
     //@Value annotation does not work with static fields.
@@ -47,6 +48,7 @@ public class MybatisConfig {
         factoryBean.setDataSource(dataSource);
         Configuration configuration = new Configuration();
         configuration.addMapper(AccountMapper.class);
+        configuration.addMapper(WebResourceMapper.class);
         factoryBean.setConfiguration(configuration);
         return factoryBean.getObject();
     }
@@ -63,7 +65,7 @@ public class MybatisConfig {
             @Value("${datasource.username}") String username,
             @Value("${datasource.password}") String password
     ) {
-//        System.out.println("source = " + driverClass);
+        System.out.println("source = " + driverClass);
         PooledDataSource dataSource = new PooledDataSource();
         dataSource.setDriver(driverClass);
         dataSource.setUrl(url);

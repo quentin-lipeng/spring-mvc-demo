@@ -7,6 +7,7 @@ package org.quentin.web.shiro;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -41,8 +42,11 @@ public class AccountRealm extends AuthorizingRealm {
     }
 
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         logger.info("doGetAuthorizationInfo === ");
-        return null;
+        // 获取当前用户
+        logger.info("principals.getPrimaryPrincipal() = " + principals.getPrimaryPrincipal());
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        return authorizationInfo;
     }
 }

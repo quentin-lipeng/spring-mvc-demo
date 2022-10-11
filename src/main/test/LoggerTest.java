@@ -11,10 +11,9 @@ import org.slf4j.LoggerFactory;
  */
 public class LoggerTest {
     public static final Logger logger = LoggerFactory.getLogger(LoggerTest.class);
-    @Test
-    public void logBackTest(){
 
-        logger.info("info");
+    @Test
+    public void logBackTest() {
 //        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 //        // print logback's internal status
 //        StatusPrinter.print(lc);

@@ -19,6 +19,10 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-version>5.3.23</spring-version>
     </properties>
+    <build>
+        <plugins>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
@@ -128,6 +132,38 @@
             <artifactId>shiro-web</artifactId>
             <version>1.9.0</version>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.httpcomponents</groupId>-->
+        <!--            <artifactId>httpcore</artifactId>-->
+        <!--            <version>4.4.13</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-webflux -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+            <version>${spring-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 </project>

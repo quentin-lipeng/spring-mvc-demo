@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -25,9 +27,11 @@ import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author:quentin
@@ -35,10 +39,10 @@ import java.util.List;
  * @Description: web config
  */
 @EnableWebMvc
+//@ComponentScan("org.quentin.web")
 @Configuration
 // 其中shiro的配置基本都是shiro提供好的 但由于某些程序报错不得不自己实现
 @Import({MybatisConfig.class,
-//        MapperConfig.class,
 //        ShiroBeanConfiguration.class,
 //        ShiroWebFilterConfiguration.class,
         ShiroConfig.class,
@@ -48,14 +52,33 @@ import java.util.List;
 })
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    public static final Logger logger = LoggerFactory.getLogger(WebMvcConfig.class);
-
     // 此方法为@Value注解工作 但加此bean的具体原因还没搞清楚
     // 目前的作用解决了 配置LifecycleBeanPostProcessor后 就算其bean配置为static注入
     // 依然解决不了@Value无法获取到值 但加此bean后解决
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
+        PropertySourcesPlaceholderConfigurer placeholderConfigurer = new PropertySourcesPlaceholderConfigurer();
+        Properties properties = new Properties();
+        //此方法配置的property 可以使用@Value获取
+//        properties.setProperty("user.lastname", "mike");
+        // bring in some property values from a Properties file
+        // 等同于@PropertySource("classpath:jdbc.properties")
+        Resource resource = new ClassPathResource("jdbc.properties");
+        placeholderConfigurer.setLocation(resource);
+        placeholderConfigurer.setProperties(properties);
+        return placeholderConfigurer;
+    }
+
+    @Bean
+    public FreeMarkerViewResolver freemarkerViewResolver() {
+        FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
+        resolver.setCache(true);
+        // 因为在freeMarkerConfigurer()已经配置前缀
+        resolver.setPrefix("");
+        resolver.setSuffix(".ftl");
+        resolver.setContentType("text/html; charset=utf-8");
+        resolver.setOrder(0);
+        return resolver;
     }
 
     @Bean
@@ -71,28 +94,25 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public FreeMarkerConfigurer freeMarkerConfigurer() {
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
-        configurer.setTemplateLoaderPath("/WEB-INF/freemarker");
+        configurer.setDefaultEncoding("utf-8");
+        Properties properties = new Properties();
+//        properties.setProperty("locale", "utf-8");
+//        properties.setProperty("default_encoding", "utf-8");
+        configurer.setFreemarkerSettings(properties);
+        configurer.setTemplateLoaderPath("/WEB-INF/freemarker/");
         return configurer;
     }
 
-//    @Bean
-//    public FreeMarkerViewResolver freemarkerViewResolver() {
-//        FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
-//        resolver.setCache(true);
-//        resolver.setPrefix("");
-//        resolver.setSuffix(".ftl");
-//        resolver.setOrder(0);
-//        return resolver;
-//    }
 
     /*
-    此方法可以为freemarker进行默认配置
     也可以使用FreeMarkerViewResolver
      */
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
+        //此方法可以为freemarker进行默认配置
+//        registry.freeMarker();
         registry.order(0);
-        registry.freeMarker();
+        registry.viewResolver(freemarkerViewResolver());
     }
 
     @Override

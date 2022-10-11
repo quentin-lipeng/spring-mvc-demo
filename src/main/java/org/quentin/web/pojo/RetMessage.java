@@ -5,21 +5,32 @@
  */
 package org.quentin.web.pojo;
 
-public class RetMessage {
+import java.util.ArrayList;
+
+public class RetMessage<T> {
     private String status;
     private String msg;
+    private ArrayList<T> data;
 
     public RetMessage() {
     }
 
-    public RetMessage status(String status){
+    public RetMessage<T> status(String status) {
         this.status = status;
         return this;
     }
 
-    public RetMessage msg(String msg){
+    public RetMessage<T> msg(String msg) {
         this.msg = msg;
         return this;
+    }
+
+    public ArrayList<T> getData() {
+        return data;
+    }
+
+    public void setData(ArrayList<T> data) {
+        this.data = data;
     }
 
     public String getStatus() {
@@ -43,6 +54,7 @@ public class RetMessage {
         return "RetMessage{" +
                 "status='" + status + '\'' +
                 ", msg='" + msg + '\'' +
+                ", data=" + data +
                 '}';
     }
 }

@@ -15,6 +15,7 @@ import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.quentin.web.shiro.AccountRealm;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -47,16 +48,17 @@ public class ShiroConfig {
         return accountRealm;
     }
 
-    @Bean
-    protected CacheManager cacheManager() {
-        return new MemoryConstrainedCacheManager();
-    }
 
     //    @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
 
+        // TODO 把所有路径访问权限存储到数据库 并通过前端控制显示
         // 也可以使用map一次性把所有规则注入
+        chainDefinition.addPathDefinition("/welcome", "anon");
+        chainDefinition.addPathDefinition("/resource", "anon");
+        chainDefinition.addPathDefinition("/resource/list", "anon");
+        chainDefinition.addPathDefinition("/", "anon");
         chainDefinition.addPathDefinition("/auth/login", "anon");
         chainDefinition.addPathDefinition("/auth/register", "anon");
         // all other paths require a logged in user
@@ -72,6 +74,8 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
         filterFactoryBean.setSecurityManager(securityManager);
+        //使用方法作为参数需要在@Configuration类下才可使用 否则使用上面的方法 通过成员方法注入
+//        filterFactoryBean.setSecurityManager(securityManager());
         filterFactoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());
         filterFactoryBean.setLoginUrl("/auth/login/");
         filterFactoryBean.setGlobalFilters(globalFilters());
@@ -82,10 +86,16 @@ public class ShiroConfig {
         return filterFactoryBean;
     }
 
+    protected CacheManager cacheManager() {
+        return new MemoryConstrainedCacheManager();
+    }
+
+
     @Bean
     public DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(realm);
+        securityManager.setCacheManager(cacheManager());
         return securityManager;
     }
 
