@@ -22,10 +22,16 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(final ServletContext sc) {
 
+        // 如果使用xml配置
+//        XmlWebApplicationContext appContext = new XmlWebApplicationContext();
+//        appContext.setConfigLocation("/WEB-INF/spring/dispatcher-config.xml");
+
         AnnotationConfigWebApplicationContext root =
                 new AnnotationConfigWebApplicationContext();
 
-        root.scan("org.quentin.web");
+        // 配置方式不同
+//        root.scan("org.quentin.web");
+        root.register(WebMvcConfig.class);
         sc.addListener(new ContextLoaderListener(root));
 
         FilterRegistration.Dynamic shiroFilter = sc.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
@@ -36,5 +42,6 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
                 sc.addServlet("mvc", new DispatcherServlet(new GenericWebApplicationContext()));
         appServlet.setLoadOnStartup(1);
         appServlet.addMapping("/");
+        appServlet.setInitParameter("throwExceptionIfNoHandlerFound", "true");
     }
 }

@@ -39,7 +39,7 @@ import java.util.Properties;
  * @Description: web config
  */
 @EnableWebMvc
-//@ComponentScan("org.quentin.web")
+@ComponentScan("org.quentin.web")
 @Configuration
 // 其中shiro的配置基本都是shiro提供好的 但由于某些程序报错不得不自己实现
 @Import({MybatisConfig.class,

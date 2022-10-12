@@ -55,6 +55,7 @@ public class ShiroConfig {
 
         // TODO 把所有路径访问权限存储到数据库 并通过前端控制显示
         // 也可以使用map一次性把所有规则注入
+        chainDefinition.addPathDefinition("/error", "anon");
         chainDefinition.addPathDefinition("/welcome", "anon");
         chainDefinition.addPathDefinition("/resource", "anon");
         chainDefinition.addPathDefinition("/resource/list", "anon");

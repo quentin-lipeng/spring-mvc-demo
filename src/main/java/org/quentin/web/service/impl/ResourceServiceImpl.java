@@ -23,7 +23,7 @@ public class ResourceServiceImpl implements ResourceService {
     private WebResourceMapper webResourceMapper;
 
     @Override
-    public ArrayList<WebResource.WithNoId> resourceList() {
+    public ArrayList<WebResource> resourceList() {
         return webResourceMapper.webResourceList();
     }
 }

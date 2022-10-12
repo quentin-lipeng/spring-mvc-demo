@@ -5,12 +5,10 @@
  */
 package org.quentin.web.pojo;
 
-import java.util.ArrayList;
-
 public class RetMessage<T> {
     private String status;
     private String msg;
-    private ArrayList<T> data;
+    private T data;
 
     public RetMessage() {
     }
@@ -25,11 +23,16 @@ public class RetMessage<T> {
         return this;
     }
 
-    public ArrayList<T> getData() {
+    public RetMessage<T> data(T data) {
+        this.data = data;
+        return this;
+    }
+
+    public T getData() {
         return data;
     }
 
-    public void setData(ArrayList<T> data) {
+    public void setData(T data) {
         this.data = data;
     }
 

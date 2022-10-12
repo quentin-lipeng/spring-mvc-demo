@@ -19,6 +19,13 @@
                 }).then(resp => {
                 return resp.json();
             }).then(data => {
+                if (data.status === "ok") {
+                    setTimeout(() => {
+                        window.location = "/home"
+                    }, 1000)
+                }
+
+
                 console.log(data);
             })
         }

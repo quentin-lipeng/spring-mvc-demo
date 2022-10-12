@@ -15,6 +15,9 @@
             fetch("/auth/logout", {method: "POST"}).then(resp => {
                 return resp.json();
             }).then(data => {
+                setTimeout(() => {
+                    window.location = 'auth/login/';
+                }, 1000)
                 console.log(data);
             })
         }

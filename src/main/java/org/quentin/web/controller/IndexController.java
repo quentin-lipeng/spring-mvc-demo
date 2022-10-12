@@ -18,7 +18,12 @@ public class IndexController {
     public static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
     @GetMapping("/")
-    public String index() {
+    public String welcome() {
         return "redirect:welcome";
+    }
+
+    @GetMapping("/home")
+    public String index() {
+        return "index";
     }
 }
