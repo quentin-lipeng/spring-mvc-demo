@@ -12,7 +12,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.quentin.web.mapper.AccountMapper;
-import org.quentin.web.user.pojo.Account;
+import org.quentin.web.user.pojo.UserAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ public class AccountRealm extends AuthorizingRealm {
         if (upToken.getUsername() == null) {
             throw new AccountException("Null usernames are not allowed by this realm.");
         }
-        Account account = accountMapper.getUserByName(upToken.getUsername());
+        UserAccount account = accountMapper.getUserByName(upToken.getUsername());
         if (account != null) {
             return new SimpleAuthenticationInfo(
                     upToken.getPrincipal(), account.getPassword(), ByteSource.Util.bytes(account.getSalt()), this.getName());

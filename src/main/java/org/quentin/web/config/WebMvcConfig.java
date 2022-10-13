@@ -6,6 +6,7 @@ import org.apache.shiro.spring.config.ShiroBeanConfiguration;
 import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
 import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration;
+import org.quentin.web.validator.UserAccValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
@@ -17,8 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -51,6 +54,11 @@ import java.util.Properties;
         ShiroRequestMappingConfig.class
 })
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Bean
+    public UserAccValidator userAccValidator(){
+        return new UserAccValidator();
+    }
 
     // 此方法为@Value注解工作 但加此bean的具体原因还没搞清楚
     // 目前的作用解决了 配置LifecycleBeanPostProcessor后 就算其bean配置为static注入
@@ -199,12 +207,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
+//    @Bean("globalValidator")
     public Validator getValidator() {
+//        return new UserAccValidator();
         return null;
     }
 
     @Override
     public MessageCodesResolver getMessageCodesResolver() {
+//        DefaultMessageCodesResolver codesResolver = new DefaultMessageCodesResolver();
         return null;
     }
 }

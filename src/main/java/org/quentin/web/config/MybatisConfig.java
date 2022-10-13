@@ -25,6 +25,7 @@ import javax.sql.DataSource;
 因为使用了SqlSessionFactory进行mapper的注册
 下面的mapperScan对【no XML配置】 没有作用
  */
+// TODO 解决MapperScan无用的问题
 @MapperScan("org.quentin.web.mapper")
 //@PropertySource("classpath:jdbc.properties")
 public class MybatisConfig {

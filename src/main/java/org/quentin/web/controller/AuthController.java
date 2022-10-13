@@ -3,15 +3,21 @@ package org.quentin.web.controller;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.quentin.web.service.impl.AccountServiceImpl;
-import org.quentin.web.user.pojo.Account;
+import org.quentin.web.shiro.MyNamePassToken;
+import org.quentin.web.user.pojo.UserAccount;
 import org.quentin.web.pojo.RetMessage;
 import org.quentin.web.service.AccountService;
+import org.quentin.web.validator.UserAccValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,7 +38,18 @@ public class AuthController {
     @Resource(type = AccountServiceImpl.class)
     private AccountService accService;
 
-    public static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(AuthController.class);
+
+    // TODO Resource可以使用bean name 绑定吗
+    @Resource(type = UserAccValidator.class)
+    private Validator validator;
+
+    // 此注册只在当前Controller可用
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(validator);
+    }
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
@@ -41,41 +58,47 @@ public class AuthController {
         return "login";
     }
 
+    // TODO 实现remember me
     @PostMapping("/login")
     // 可以直接返回对象并转换为json或其他类型 搭配jackson-databind使用
     @ResponseBody
-    public ResponseEntity<RetMessage> login(@RequestBody Account account) {
-        if (account.getUsername() != null && accService.existAccount(account.getUsername())) {
-            UsernamePasswordToken token = new UsernamePasswordToken(account.getUsername(), account.getPassword());
+    public ResponseEntity<RetMessage<String>> login(
+            @RequestBody UserAccount account) {
+        if (account.getUsername() != null &&
+                accService.existAccount(account.getUsername())) {
+            UsernamePasswordToken token = new MyNamePassToken(account);
             try {
                 SecurityUtils.getSubject().login(token);
-                return ResponseEntity.status(HttpStatus.OK).body(new RetMessage().status("ok").msg("登录成功"));
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new RetMessage<String>().status("ok").msg("登录成功"));
             } catch (UnknownAccountException uae) {
-                //username wasn't in the system, show them an error message?
-                logger.error(uae.getMessage());
-                throw uae;
+                LOGGER.info("用户不存在");
             } catch (IncorrectCredentialsException ice) {
-                //password didn't match, try again?
-                logger.error("密码不匹配!!!");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        new RetMessage().status("error").msg("password not correct"));
+                LOGGER.info("密码不匹配!!!");
             } catch (LockedAccountException lae) {
-                logger.error(lae.getMessage());
-                //account for that username is locked - can't login.  Show them a message?
+                LOGGER.info(lae.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new RetMessage<String>().status("error").msg(
+                                "account for this username is locked - can't login."));
             } catch (AuthenticationException ae) {
-                logger.info("未知错误");
-                logger.error(ae.getMessage());
+                LOGGER.info("未知错误");
+                LOGGER.error(ae.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new RetMessage<String>().status("error").msg("" +
+                                "unknown error! please contact admin"));
             }
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new RetMessage().status("error").msg("用户名错误"));
+                new RetMessage<String>().status("error").msg(
+                        "username or password not correct"));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<RetMessage> logOut() {
+    public ResponseEntity<RetMessage<String>> logOut() {
         // 通过前端cookie中的JSESSIONID确定当前登录对象进行退出
         SecurityUtils.getSubject().logout();
-        return ResponseEntity.ok().eTag("returnMsg").body(new RetMessage().msg("ok"));
+        return ResponseEntity.ok().eTag("returnMsg").body(
+                new RetMessage<String>().msg("ok"));
     }
 
     @GetMapping("/register")
@@ -84,21 +107,22 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RetMessage> register(@RequestBody Account account) {
-        boolean exist = accService.existAccount(account.getUsername());
-        if (!exist) {
-            boolean isSuccess = accService.registerAccount(account);
-            if (isSuccess) {
-                return ResponseEntity.ok().eTag("returnMsg").body(new RetMessage().msg("ok"));
+    //其中Method validation relies on AOP Proxies around the target classes
+    public ResponseEntity<RetMessage<String>> register(
+            @Validated @RequestBody UserAccount account, BindingResult result) {
+        if (!result.hasErrors() && !accService.existAccount(account.getUsername())) {
+            if (accService.registerAccount(account)) {
+                return ResponseEntity.ok().eTag("returnMsg").body(
+                        new RetMessage<String>().msg("ok"));
             }
         }
-        return ResponseEntity.status(400).eTag("error").body(new RetMessage().status("error"));
-
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).eTag("error").body(
+                new RetMessage<String>().msg("username invalid"));
     }
 
-    @PostMapping("/get-mes")
+    @GetMapping("/get-mes")
     public ResponseEntity<String> getMes() {
-        return ResponseEntity.ok().eTag("etag ").body("hello");
+        return ResponseEntity.ok().eTag("etag").body("hello");
     }
 
     //    @GetMapping("/acc-id")

@@ -5,6 +5,7 @@
  */
 package org.quentin.web.pojo;
 
+// TODO 有待完善 感觉每次new很麻烦
 public class RetMessage<T> {
     private String status;
     private String msg;

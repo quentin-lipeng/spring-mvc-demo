@@ -1,7 +1,7 @@
 package org.quentin.web.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.quentin.web.user.pojo.Account;
+import org.quentin.web.user.pojo.UserAccount;
 
 /**
  * @author:quentin
@@ -20,11 +20,11 @@ public interface AccountMapper {
 
 //    @ResultMap(value = "accountMap")
     @Select("SELECT * FROM user_account WHERE account_id = #{accId}")
-    Account getUser(@Param("accId") String accId);
+    UserAccount getUser(@Param("accId") String accId);
 
     @ResultMap(value = "accountMap")
     @Select("SELECT * FROM user_account WHERE username = #{username}")
-    Account getUserByName(@Param("username") String username);
+    UserAccount getUserByName(@Param("username") String username);
 
     @Select("SELECT COUNT(username) FROM user_account where username = #{username}")
     int countAccountByName(@Param("username") String username);

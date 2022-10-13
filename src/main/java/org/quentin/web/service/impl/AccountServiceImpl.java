@@ -1,7 +1,7 @@
 package org.quentin.web.service.impl;
 
 import org.quentin.web.mapper.AccountMapper;
-import org.quentin.web.user.pojo.Account;
+import org.quentin.web.user.pojo.UserAccount;
 import org.quentin.web.service.AccountService;
 import org.quentin.web.utils.MyBASE64;
 import org.quentin.web.utils.MyEncrypt;
@@ -25,17 +25,17 @@ public class AccountServiceImpl implements AccountService {
     public static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
     @Override
-    public Account getAccByAccId(String accId) {
+    public UserAccount getAccByAccId(String accId) {
         return accMapper.getUser(accId);
     }
 
     @Override
-    public Account getAccByAccName(String username) {
+    public UserAccount getAccByAccName(String username) {
         return accMapper.getUserByName(username);
     }
 
     @Override
-    public boolean login(Account ac) {
+    public boolean login(UserAccount ac) {
         return true;
     }
 
@@ -46,7 +46,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean registerAccount(Account account) {
+    public boolean registerAccount(UserAccount account) {
         String salt = MyEncrypt.getSalt();
         String encryptPass = MyEncrypt.md5(account.getPassword(), salt);
         String userId = MyBASE64.encryptBASE();

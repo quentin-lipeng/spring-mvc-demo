@@ -5,16 +5,16 @@
  */
 package org.quentin.web.service;
 
-import org.quentin.web.user.pojo.Account;
+import org.quentin.web.user.pojo.UserAccount;
 
 public interface AccountService {
-    public Account getAccByAccId(String accId);
+    public UserAccount getAccByAccId(String accId);
 
-    public Account getAccByAccName(String username);
+    public UserAccount getAccByAccName(String username);
 
-    public boolean login(Account ac);
+    public boolean login(UserAccount ac);
 
     public boolean existAccount(String username);
 
-    public boolean registerAccount(Account account);
+    public boolean registerAccount(UserAccount account);
 }

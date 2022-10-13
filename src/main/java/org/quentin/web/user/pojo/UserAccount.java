@@ -5,13 +5,13 @@ package org.quentin.web.user.pojo;
  * @create: 2022-09-30 22:26
  * @Description:
  */
-public class Account {
+public class UserAccount {
     private String username;
     private String password;
     private String accountId;
     private String salt;
 
-    public Account() {
+    public UserAccount() {
     }
 
     public String getSalt() {
@@ -48,7 +48,7 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" +
+        return "UserAccount{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", accountId='" + accountId + '\'' +
