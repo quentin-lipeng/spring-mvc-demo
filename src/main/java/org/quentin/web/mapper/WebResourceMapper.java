@@ -10,21 +10,24 @@ import org.quentin.web.mapper.builder.WebResourceBuilder;
 import org.quentin.web.pojo.WebResource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface WebResourceMapper {
 
     // 如果其他方法也需要使用此Results时 可使用ResultMap("webResourceMap")
     // 但前提是注解放在方法上 这样相当于注册了此map
-    @Results(id = "webResourceMap",
+    @Results(id = "webResourceListMap",
             value = {
                     @Result(property = "resourceId", column = "res_id"),
                     @Result(property = "resourceName", column = "resource_name"),
                     @Result(property = "resourceInfo", column = "resource_info"),
             })
     @SelectProvider(type = WebResourceBuilder.class, method = "buildResourceList")
-    ArrayList<WebResource> webResourceList();
+    List<WebResource> webResourceList();
 
-    @ResultMap("webResourceMap")
+    @ResultMap("webResourceListMap")
     @Select("SELECT A.res_id, A.resource_name, A.resource_info FROM user_resource as A WHERE res_id = #{id}")
     WebResource resourceById(@Param("id") Integer id);
 }

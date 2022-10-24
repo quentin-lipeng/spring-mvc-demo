@@ -6,7 +6,6 @@
 package org.quentin.web.config;
 
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
-import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -14,6 +13,7 @@ import org.quentin.web.mapper.AccountMapper;
 import org.quentin.web.mapper.WebResourceMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
@@ -25,9 +25,9 @@ import javax.sql.DataSource;
 因为使用了SqlSessionFactory进行mapper的注册
 下面的mapperScan对【no XML配置】 没有作用
  */
-// TODO 解决MapperScan无用的问题
 @MapperScan("org.quentin.web.mapper")
 //@PropertySource("classpath:jdbc.properties")
+@Configuration
 public class MybatisConfig {
     // 因为shiro配置需要使用LifecycleBeanPostProcessor 但配置其bean会造成@Value失效
     //@Value annotation does not work with static fields.
@@ -46,17 +46,18 @@ public class MybatisConfig {
     @Bean
     public SqlSessionFactory sqlSessionFactory() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(dataSource);
-        Configuration configuration = new Configuration();
-        configuration.addMapper(AccountMapper.class);
-        configuration.addMapper(WebResourceMapper.class);
-        factoryBean.setConfiguration(configuration);
+        factoryBean.setDataSource(this.dataSource);
+        // 为什么突然可以不使用用以下方法未知 大概原因是使用了MapperScan
+//        Configuration configuration = new Configuration();
+//        configuration.addMapper(AccountMapper.class);
+//        configuration.addMapper(WebResourceMapper.class);
+//        factoryBean.setConfiguration(configuration);
         return factoryBean.getObject();
     }
 
     @Bean
     public DataSourceTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource);
+        return new DataSourceTransactionManager(this.dataSource);
     }
 
     @Bean

@@ -12,6 +12,6 @@
     <title>welcome</title>
 </head>
 <body>
-<h2>Welcome</h2>
+<h2>Welcome 欢迎</h2>
 </body>
 </html>

@@ -17,9 +17,12 @@ public class IndexController {
 
     public static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
-    @GetMapping("/")
+
+    @GetMapping("")
     public String welcome() {
-        return "redirect:welcome";
+        // redirect 用于url之间的重定向 前端会从一个url跳转到另一个url
+        // forward 用于在服务端从一个servlet到另一个 前端不会有url的变化
+        return "redirect:/welcome";
     }
 
     @GetMapping("/home")

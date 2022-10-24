@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 // TODO 路径是否加上/ 斜杠
@@ -43,17 +46,23 @@ public class WebResourceController {
     // 其中Qualifier是可选的
     @Autowired
     public WebResourceController(
-            @Qualifier(value = "resourceServiceImpl") ResourceService resourceService
-            ) {
+            @Qualifier(value = "resourceServiceImpl") ResourceService resourceService) {
         this.resourceService = resourceService;
     }
 
     @GetMapping("/list")
-    public ResponseEntity<RetMessage<ArrayList<WebResource>>> getResource() {
-        ArrayList<WebResource> resources = resourceService.resourceList();
+    public ResponseEntity<RetMessage<List<WebResource>>> getResource() {
+        List<WebResource> resources = resourceService.resourceList();
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                new RetMessage<ArrayList<WebResource>>().data(resources));
+                new RetMessage<List<WebResource>>().data(resources));
     }
 
+    @GetMapping("/map")
+    public ResponseEntity<Map<String, String>> getResourceMap() {
+        Map<String, String> resourceMap = resourceService.resourceMap();
+        return ResponseEntity.ok().body(resourceMap);
+    }
+
+    // TODO 待完善添加资源路径功能
 }

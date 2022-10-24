@@ -1,39 +1,37 @@
 package org.quentin.web.config;
 
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.apache.shiro.crypto.hash.Hash;
 import org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration;
-import org.apache.shiro.spring.config.ShiroBeanConfiguration;
 import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
 import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
-import org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration;
 import org.quentin.web.validator.UserAccValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
-import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.theme.ThemeChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -41,22 +39,28 @@ import java.util.Properties;
  * @create: 2022-09-30 17:40
  * @Description: web config
  */
+// 如果想进一步配置spring mvc 可以继承DelegatingWebMvcConfiguration来代替实现WebMvcConfigurer
+// 并去掉@EnableWebMvc 注解
 @EnableWebMvc
 @ComponentScan("org.quentin.web")
 @Configuration
 // 其中shiro的配置基本都是shiro提供好的 但由于某些程序报错不得不自己实现
-@Import({MybatisConfig.class,
+// 现在采用getRootConfigClasses()进行配置注册 所以不需要在import下面的配置类
+//@Import({
+//        MybatisConfig.class,
 //        ShiroBeanConfiguration.class,
 //        ShiroWebFilterConfiguration.class,
-        ShiroConfig.class,
-        ShiroAnnotationProcessorConfiguration.class,
-        ShiroWebConfiguration.class,
-        ShiroRequestMappingConfig.class
-})
+//        ShiroConfig.class,
+//        ShiroAnnotationProcessorConfiguration.class,
+//        ShiroWebConfiguration.class,
+//        ShiroRequestMappingConfig.class,
+//        SpringBeanConfig.class,
+//        FunctionalConfig.class
+//})
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
-    public UserAccValidator userAccValidator(){
+    public UserAccValidator userAccValidator() {
         return new UserAccValidator();
     }
 
@@ -84,6 +88,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 因为在freeMarkerConfigurer()已经配置前缀
         resolver.setPrefix("");
         resolver.setSuffix(".ftl");
+        // 设置解析中文主要配置
         resolver.setContentType("text/html; charset=utf-8");
         resolver.setOrder(0);
         return resolver;
@@ -103,10 +108,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public FreeMarkerConfigurer freeMarkerConfigurer() {
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
         configurer.setDefaultEncoding("utf-8");
-        Properties properties = new Properties();
+//        Properties properties = new Properties();
 //        properties.setProperty("locale", "utf-8");
 //        properties.setProperty("default_encoding", "utf-8");
-        configurer.setFreemarkerSettings(properties);
+//        configurer.setFreemarkerSettings(properties);
         configurer.setTemplateLoaderPath("/WEB-INF/freemarker/");
         return configurer;
     }
@@ -119,8 +124,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void configureViewResolvers(ViewResolverRegistry registry) {
         //此方法可以为freemarker进行默认配置
 //        registry.freeMarker();
-        registry.order(0);
+
         registry.viewResolver(freemarkerViewResolver());
+        registry.enableContentNegotiation(new MappingJackson2JsonView());
     }
 
     @Override
@@ -158,6 +164,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/favicon.ico")
+                .addResourceLocations("classpath:/static/favicon.ico");
     }
 
     @Override
@@ -167,7 +175,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // 如果requestMapping有映射对应的路径那么下面的配置将失效
+        // 如果RequestMapping有映射对应的路径那么下面的配置将失效
 //        registry.addViewController("/index").setViewName("index");
     }
 

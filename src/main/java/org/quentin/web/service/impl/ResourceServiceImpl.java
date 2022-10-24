@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.util.*;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -23,7 +23,18 @@ public class ResourceServiceImpl implements ResourceService {
     private WebResourceMapper webResourceMapper;
 
     @Override
-    public ArrayList<WebResource> resourceList() {
+    public List<WebResource> resourceList() {
         return webResourceMapper.webResourceList();
+    }
+
+    @Override
+    public Map<String, String> resourceMap() {
+        List<WebResource> resources = webResourceMapper.webResourceList();
+        Map<String, String> resourceMap = new LinkedHashMap<>();
+        resources.forEach(resource -> {
+            resourceMap.put(resource.getResourceName(), resource.getResourceInfo());
+        });
+        LOG.info("class = " + resourceMap.getClass());
+        return resourceMap;
     }
 }
