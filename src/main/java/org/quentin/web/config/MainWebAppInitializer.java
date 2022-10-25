@@ -1,15 +1,12 @@
-
 package org.quentin.web.config;
 
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.*;
-import java.util.EnumSet;
 
 /**
  * @author:quentin
@@ -19,9 +16,13 @@ import java.util.EnumSet;
 
 public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-    // spring 配置 通过父类获取加载并注册
-    // 这个相当于 applicationContext.xml
     // TODO 此配置后以下配置类也需要使用@Configuration 但不加也可以用 具体未知
+    /**
+     * spring 配置 通过父类获取加载并注册
+     * 这个相当于 applicationContext.xml
+     * @author quentin
+     * @date 2022/10/25
+     */
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class[]{
@@ -34,16 +35,22 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
         };
     }
 
-    // spring mvc 配置 通过父类获取加载并注册
-    // 这个等同于 dispatcher-servlet.xml
-    // 因为只有一个DispatcherServlet 所以也可以把WebMvcConfig放在getRootConfigClasses()下
-    // 参照 https://stackoverflow.com/questions/35258758/getservletconfigclasses-vs-getrootconfigclasses-when-extending-abstractannot
-    // 又因为shiroConfig中需要用到service类 所以需要弄到ComponentScan所以就把配置类放在一起
-    // 后期可以把扫描注解和bean放在SpringBeanConfig中管理
+    /**
+     * 	If an application context hierarchy is not required,
+     * 	applications can return all configuration through
+     * 	getRootConfigClasses() and null from getServletConfigClasses().
+     * 	spring mvc 配置 通过父类获取加载并注册
+     *  这个等同于 dispatcher-servlet.xml
+     *  因为只有一个DispatcherServlet 所以也可以把WebMvcConfig放在getRootConfigClasses()下
+     *  参照 https://stackoverflow.com/questions/35258758/getservletconfigclasses-vs-getrootconfigclasses-when-extending-abstractannot
+     *  又因为shiroConfig中需要用到service类 所以需要弄到ComponentScan所以就把配置类放在一起
+     *  后期可以把扫描注解和bean放在SpringBeanConfig中管理
+     * @author quentin
+     * @date 2022/10/25
+     */
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{
-        };
+        return new Class<?>[0];
     }
 
     @Override
@@ -77,9 +84,15 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
 //        // 下面注册filter可以参照 AbstractDispatcherServletInitializer.registerServletFilter()
-        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
-        shiroFilter.setInitParameter("targetFilterLifecycle", "true");
-        shiroFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
+//        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
+//        shiroFilter.setInitParameter("targetFilterLifecycle", "true");
+//        shiroFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
         super.onStartup(servletContext);
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        // 开启日志 似乎和把log等级调到debug差不多
+//        registration.setInitParameter("enableLoggingRequestDetails", "true");
     }
 }

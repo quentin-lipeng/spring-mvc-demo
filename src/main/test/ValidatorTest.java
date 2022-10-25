@@ -1,7 +1,6 @@
 import org.junit.Test;
-import org.quentin.web.user.pojo.UserAccount;
+import org.quentin.web.dto.UserAccount;
 import org.quentin.web.validator.UserAccValidator;
-import org.springframework.beans.PropertyValue;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 

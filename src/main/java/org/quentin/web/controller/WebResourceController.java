@@ -1,15 +1,10 @@
-
 package org.quentin.web.controller;
 
 import org.quentin.web.pojo.RetMessage;
-import org.quentin.web.pojo.WebResource;
+import org.quentin.web.dto.WebResource;
 import org.quentin.web.service.ResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.Cache;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -39,12 +33,10 @@ public class WebResourceController {
         return "resource";
     }
 
-    // TODO 看文档查看一下 注入域的依赖和构造器方式注入依赖的区别
     // 下面如果是多参可以写多个@Qualifier
     // 其中Qualifier是可选的
-    @Autowired
     public WebResourceController(
-            @Qualifier(value = "resourceServiceImpl") ResourceService resourceService) {
+            ResourceService resourceService) {
         this.resourceService = resourceService;
     }
 

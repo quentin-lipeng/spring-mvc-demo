@@ -7,10 +7,12 @@ package org.quentin.web.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.quentin.web.mapper.builder.WebResourceBuilder;
-import org.quentin.web.pojo.WebResource;
+import org.quentin.web.dto.WebResource;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface WebResourceMapper {
 
     // 如果其他方法也需要使用此Results时 可使用ResultMap("webResourceMap")

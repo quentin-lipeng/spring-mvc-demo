@@ -28,12 +28,13 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * 如果想进一步配置spring mvc 可以继承DelegatingWebMvcConfiguration来代替实现WebMvcConfigurer
+ * 并去掉@EnableWebMvc 注解
+ * EnableWebMvc导入了DelegatingWebMvcConfiguration
  * @author:quentin
  * @create: 2022-09-30 17:40
  * @Description: web config
  */
-// 如果想进一步配置spring mvc 可以继承DelegatingWebMvcConfiguration来代替实现WebMvcConfigurer
-// 并去掉@EnableWebMvc 注解
 @EnableWebMvc
 @ComponentScan("org.quentin.web.controller")
 @Configuration
@@ -63,14 +64,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer placeholderConfigurer = new PropertySourcesPlaceholderConfigurer();
-        Properties properties = new Properties();
+//        Properties properties = new Properties();
         //此方法配置的property 可以使用@Value获取
 //        properties.setProperty("user.lastname", "mike");
         // bring in some property values from a Properties file
         // 等同于@PropertySource("classpath:jdbc.properties")
         Resource resource = new ClassPathResource("jdbc.properties");
         placeholderConfigurer.setLocation(resource);
-        placeholderConfigurer.setProperties(properties);
+//        placeholderConfigurer.setProperties(properties);
         return placeholderConfigurer;
     }
 

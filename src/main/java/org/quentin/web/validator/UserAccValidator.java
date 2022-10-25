@@ -5,7 +5,7 @@
  */
 package org.quentin.web.validator;
 
-import org.quentin.web.user.pojo.UserAccount;
+import org.quentin.web.dto.UserAccount;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;

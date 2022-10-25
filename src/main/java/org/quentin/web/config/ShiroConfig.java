@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -39,17 +38,11 @@ import java.util.Map;
 })
 public class ShiroConfig {
 
-    private SecurityManager securityManager;
     private final Map<String, String> resourceMap;
 
     public ShiroConfig(
             @Qualifier("resourceServiceImpl") ResourceService resourceService) {
         this.resourceMap = resourceService.resourceMap();
-    }
-
-    @Resource
-    public void setSecurityManager(SecurityManager securityManager) {
-        this.securityManager = securityManager;
     }
 
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
@@ -66,7 +59,7 @@ public class ShiroConfig {
     }
 
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean() {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
         filterFactoryBean.setSecurityManager(securityManager);
         //使用方法作为参数需要在@Configuration类下才可使用 否则使用上面的方法 通过成员方法注入 方式选其一
@@ -87,7 +80,7 @@ public class ShiroConfig {
 
 
     @Bean
-    public DefaultWebSecurityManager securityManager(
+    public SecurityManager securityManager(
             AccountRealm accRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(accRealm);

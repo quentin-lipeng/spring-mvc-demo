@@ -1,4 +1,4 @@
-package org.quentin.web.user.pojo;
+package org.quentin.web.dto;
 
 /**
  * @author:quentin

@@ -4,7 +4,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.quentin.web.service.impl.AccountServiceImpl;
 import org.quentin.web.shiro.MyNamePassToken;
-import org.quentin.web.user.pojo.UserAccount;
+import org.quentin.web.dto.UserAccount;
 import org.quentin.web.pojo.RetMessage;
 import org.quentin.web.service.AccountService;
 import org.quentin.web.validator.UserAccValidator;
@@ -35,20 +35,22 @@ public class AuthController {
     /**
      * 也可以使用@Resource(type = AccountServiceImpl.class)
      */
-    @Resource(type = AccountServiceImpl.class)
-    private AccountService accService;
+    private final AccountService accService;
+    private final Validator userAccValidator;
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger(AuthController.class);
 
-    // TODO Resource可以使用bean name 绑定吗
-    @Resource(type = UserAccValidator.class)
-    private Validator validator;
+    public AuthController(
+            AccountService accountService, UserAccValidator userAccValidator) {
+        this.accService = accountService;
+        this.userAccValidator = userAccValidator;
+    }
 
     // 此注册只在当前Controller可用
     @InitBinder
     private void initBinder(WebDataBinder binder) {
-        binder.setValidator(validator);
+        binder.setValidator(userAccValidator);
     }
 
     @GetMapping("/login")

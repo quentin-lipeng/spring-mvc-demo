@@ -6,7 +6,7 @@
 package org.quentin.web.shiro;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.quentin.web.user.pojo.UserAccount;
+import org.quentin.web.dto.UserAccount;
 
 public class MyNamePassToken extends UsernamePasswordToken {
     public MyNamePassToken(UserAccount account) {

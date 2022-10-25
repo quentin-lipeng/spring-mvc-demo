@@ -3,7 +3,7 @@
  * @create: 2022-10-03 11:03
  * @Description: user account resource with id/uuid
  */
-package org.quentin.web.user.pojo;
+package org.quentin.web.dto;
 
 public class UserAccRole {
     private int acId;

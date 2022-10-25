@@ -1,24 +1,24 @@
+package org.quentin.web.dto;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 /**
  * @author:quentin
- * @create: 2022-10-03 10:59
- * @Description: user resource
+ * @create: 2022-10-10 20:56
+ * @Description: 网页资源
  */
-package org.quentin.web.user.pojo;
+public class WebResource {
 
-public class UserResource {
-    private int resId;
+    private String resourceId;
     private String resourceName;
     private String resourceInfo;
 
-    public UserResource() {
+    public String getResourceId() {
+        return resourceId;
     }
 
-    public int getResId() {
-        return resId;
-    }
-
-    public void setResId(int resId) {
-        this.resId = resId;
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 
     public String getResourceName() {
@@ -39,8 +39,8 @@ public class UserResource {
 
     @Override
     public String toString() {
-        return "UserResource{" +
-                "resId=" + resId +
+        return "WebResource{" +
+                "resourceId='" + resourceId + '\'' +
                 ", resourceName='" + resourceName + '\'' +
                 ", resourceInfo='" + resourceInfo + '\'' +
                 '}';

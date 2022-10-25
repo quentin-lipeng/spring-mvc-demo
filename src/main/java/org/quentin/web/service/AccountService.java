@@ -5,7 +5,7 @@
  */
 package org.quentin.web.service;
 
-import org.quentin.web.user.pojo.UserAccount;
+import org.quentin.web.dto.UserAccount;
 
 public interface AccountService {
     public UserAccount getAccByAccId(String accId);

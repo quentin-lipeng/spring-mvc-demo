@@ -1,7 +1,7 @@
 package org.quentin.web.service.impl;
 
 import org.quentin.web.mapper.AccountMapper;
-import org.quentin.web.user.pojo.UserAccount;
+import org.quentin.web.dto.UserAccount;
 import org.quentin.web.service.AccountService;
 import org.quentin.web.utils.MyBASE64;
 import org.quentin.web.utils.MyEncrypt;
@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 
 /**
  * @author:quentin
@@ -19,8 +18,11 @@ import javax.annotation.Resource;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    @Resource
-    private AccountMapper accMapper;
+    private final AccountMapper accMapper;
+
+    public AccountServiceImpl(AccountMapper accountMapper){
+        this.accMapper = accountMapper;
+    }
 
     public static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
@@ -41,8 +43,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean existAccount(String username) {
-        int userCount = accMapper.countAccountByName(username);
-        return userCount > 0;
+        return accMapper.countAccountByName(username) > 0;
     }
 
     @Override

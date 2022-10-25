@@ -3,7 +3,7 @@
  * @create: 2022-10-03 10:58
  * @Description: user role pojo
  */
-package org.quentin.web.user.pojo;
+package org.quentin.web.dto;
 
 public class UserRole {
     private int roleId;

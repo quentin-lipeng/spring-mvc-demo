@@ -12,7 +12,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.quentin.web.mapper.AccountMapper;
-import org.quentin.web.user.pojo.UserAccount;
+import org.quentin.web.dto.UserAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

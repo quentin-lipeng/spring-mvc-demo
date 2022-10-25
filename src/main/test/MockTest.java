@@ -36,7 +36,7 @@ public class MockTest {
         // 如果使用此方法需要在WebMvcConfig中扫描注解 在MainWebAppInit扫描没有用
 //        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 //        this.mockMvc = MockMvcBuilders.standaloneSetup(new IndexController()).build();
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new AuthController()).build();
+//        this.mockMvc = MockMvcBuilders.standaloneSetup(new AuthController()).build();
     }
 
     @Test

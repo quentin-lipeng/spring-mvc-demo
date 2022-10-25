@@ -3,7 +3,7 @@
  * @create: 2022-10-03 11:01
  * @Description: user role resource with id
  */
-package org.quentin.web.user.pojo;
+package org.quentin.web.dto;
 
 public class UserRoleResource {
     private int reId;

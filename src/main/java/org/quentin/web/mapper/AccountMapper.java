@@ -1,13 +1,15 @@
 package org.quentin.web.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.quentin.web.user.pojo.UserAccount;
+import org.quentin.web.dto.UserAccount;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author:quentin
  * @create: 2022-09-30 22:26
  * @Description: mybatis account mapper
  */
+@Repository
 public interface AccountMapper {
     // 映射pojo对应的数据库属性
     @Results(id = "accountMap",
@@ -17,8 +19,6 @@ public interface AccountMapper {
                     @Result(property = "password", column = "password"),
                     @Result(property = "salt", column = "salt"),
             })
-
-//    @ResultMap(value = "accountMap")
     @Select("SELECT * FROM user_account WHERE account_id = #{accId}")
     UserAccount getUser(@Param("accId") String accId);
 
