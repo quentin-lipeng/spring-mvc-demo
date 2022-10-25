@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,11 +41,8 @@ public class CacheConfig {
     public CacheManager cacheManager(
             ConcurrentMapCache cacheBeanResource) {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
-        List<Cache> list = new ArrayList<>();
-        list.add(cacheBeanResource);
-        cacheManager.setCaches(list);
-//        cacheManager.setCaches(
-//                Collections.singletonList(new ConcurrentMapCache("resources")));
+        cacheManager.setCaches(
+                Collections.singletonList(cacheBeanResource));
         return cacheManager;
     }
 
