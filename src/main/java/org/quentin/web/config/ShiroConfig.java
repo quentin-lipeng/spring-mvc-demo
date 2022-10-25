@@ -58,16 +58,6 @@ public class ShiroConfig {
         // 通过数据库动态加载
         chainDefinition.addPathDefinitions(this.resourceMap);
 
-        // 也可以使用map一次性把所有规则注入
-//        chainDefinition.addPathDefinition("/error", "anon");
-//        chainDefinition.addPathDefinition("/welcome", "anon");
-//        chainDefinition.addPathDefinition("/resource", "anon");
-//        chainDefinition.addPathDefinition("/resource/list", "anon");
-//        chainDefinition.addPathDefinition("/", "anon");
-//        chainDefinition.addPathDefinition("/auth/login", "anon");
-//        chainDefinition.addPathDefinition("/auth/register", "anon");
-//        // all other paths require a logged in user
-//        chainDefinition.addPathDefinition("/**", "authc");
         return chainDefinition;
     }
 

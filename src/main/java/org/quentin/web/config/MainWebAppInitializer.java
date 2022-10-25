@@ -1,45 +1,22 @@
-/**
- * @author:quentin
- * @create: 2022-09-30 17:42
- * @Description: init
- */
+
 package org.quentin.web.config;
 
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.*;
+import java.util.EnumSet;
 
-//public class MainWebAppInitializer implements WebApplicationInitializer {
-//    @Override
-//    public void onStartup(final ServletContext sc) {
-//
-//        // 如果使用xml配置
-////        XmlWebApplicationContext appContext = new XmlWebApplicationContext();
-////        appContext.setConfigLocation("/WEB-INF/spring/dispatcher-config.xml");
-//
-//        AnnotationConfigWebApplicationContext root =
-//                new AnnotationConfigWebApplicationContext();
-//
-//        // 配置方式不同
-////        root.scan("org.quentin.web");
-//        root.register(WebMvcConfig.class);
-//        sc.addListener(new ContextLoaderListener(root));
-//
-//        FilterRegistration.Dynamic shiroFilter = sc.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
-//        shiroFilter.setInitParameter("targetFilterLifecycle", "true");
-//        shiroFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
-//
-//        ServletRegistration.Dynamic appServlet =
-//                sc.addServlet("mvc", new DispatcherServlet(new GenericWebApplicationContext()));
-//        appServlet.setLoadOnStartup(1);
-//        appServlet.addMapping("/");
-//        appServlet.setInitParameter("throwExceptionIfNoHandlerFound", "true");
-//    }
-//}
+/**
+ * @author:quentin
+ * @create: 2022-09-30 17:42
+ * @Description: init
+ */
+
 public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     // spring 配置 通过父类获取加载并注册
@@ -100,9 +77,9 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
 //        // 下面注册filter可以参照 AbstractDispatcherServletInitializer.registerServletFilter()
-//        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
-//        shiroFilter.setInitParameter("targetFilterLifecycle", "true");
-//        shiroFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
+        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
+        shiroFilter.setInitParameter("targetFilterLifecycle", "true");
+        shiroFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
         super.onStartup(servletContext);
     }
 }

@@ -37,19 +37,6 @@ import java.util.Properties;
 @EnableWebMvc
 @ComponentScan("org.quentin.web.controller")
 @Configuration
-// 其中shiro的配置基本都是shiro提供好的 但由于某些程序报错不得不自己实现
-// 现在采用getRootConfigClasses()进行配置注册 所以不需要在import下面的配置类
-//@Import({
-//        MybatisConfig.class,
-//        ShiroBeanConfiguration.class,
-//        ShiroWebFilterConfiguration.class,
-//        ShiroConfig.class,
-//        ShiroAnnotationProcessorConfiguration.class,
-//        ShiroWebConfiguration.class,
-//        ShiroRequestMappingConfig.class,
-//        SpringBeanConfig.class,
-//        FunctionalConfig.class
-//})
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
@@ -101,10 +88,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public FreeMarkerConfigurer freeMarkerConfigurer() {
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
         configurer.setDefaultEncoding("utf-8");
-//        Properties properties = new Properties();
-//        properties.setProperty("locale", "utf-8");
-//        properties.setProperty("default_encoding", "utf-8");
-//        configurer.setFreemarkerSettings(properties);
         configurer.setTemplateLoaderPath("/WEB-INF/freemarker/");
         return configurer;
     }
@@ -114,9 +97,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        //此方法可以为freemarker进行默认配置
-//        registry.freeMarker();
-
         registry.viewResolver(freemarkerViewResolver());
         registry.enableContentNegotiation(new MappingJackson2JsonView());
     }
