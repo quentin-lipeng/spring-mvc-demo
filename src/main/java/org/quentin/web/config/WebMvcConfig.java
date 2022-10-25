@@ -1,10 +1,6 @@
 package org.quentin.web.config;
 
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.apache.shiro.crypto.hash.Hash;
-import org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration;
-import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
-import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.quentin.web.validator.UserAccValidator;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -21,7 +17,6 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
-import org.springframework.web.servlet.theme.ThemeChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
@@ -29,9 +24,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -42,7 +35,7 @@ import java.util.Properties;
 // 如果想进一步配置spring mvc 可以继承DelegatingWebMvcConfiguration来代替实现WebMvcConfigurer
 // 并去掉@EnableWebMvc 注解
 @EnableWebMvc
-@ComponentScan("org.quentin.web")
+@ComponentScan("org.quentin.web.controller")
 @Configuration
 // 其中shiro的配置基本都是shiro提供好的 但由于某些程序报错不得不自己实现
 // 现在采用getRootConfigClasses()进行配置注册 所以不需要在import下面的配置类
@@ -58,6 +51,19 @@ import java.util.Properties;
 //        FunctionalConfig.class
 //})
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Bean
+    public FreeMarkerViewResolver freemarkerViewResolver() {
+        FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
+        resolver.setCache(true);
+        // 因为在freeMarkerConfigurer()已经配置前缀
+        resolver.setPrefix("");
+        resolver.setSuffix(".ftl");
+        // 设置解析中文主要配置
+        resolver.setContentType("text/html; charset=utf-8");
+        resolver.setOrder(0);
+        return resolver;
+    }
 
     @Bean
     public UserAccValidator userAccValidator() {
@@ -82,19 +88,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public FreeMarkerViewResolver freemarkerViewResolver() {
-        FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
-        resolver.setCache(true);
-        // 因为在freeMarkerConfigurer()已经配置前缀
-        resolver.setPrefix("");
-        resolver.setSuffix(".ftl");
-        // 设置解析中文主要配置
-        resolver.setContentType("text/html; charset=utf-8");
-        resolver.setOrder(0);
-        return resolver;
-    }
-
-    @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver bean = new InternalResourceViewResolver();
         bean.setViewClass(JstlView.class);
@@ -115,7 +108,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         configurer.setTemplateLoaderPath("/WEB-INF/freemarker/");
         return configurer;
     }
-
 
     /*
     也可以使用FreeMarkerViewResolver

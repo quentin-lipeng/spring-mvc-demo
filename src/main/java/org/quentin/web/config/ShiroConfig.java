@@ -6,17 +6,20 @@ import org.apache.shiro.event.EventBus;
 import org.apache.shiro.event.support.DefaultEventBus;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.ShiroEventBusBeanPostProcessor;
+import org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
+import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
+import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.quentin.web.service.ResourceService;
 import org.quentin.web.shiro.AccountRealm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -29,14 +32,18 @@ import java.util.Map;
  * @Description: shiro config file
  */
 @Configuration
+@Import({
+        ShiroAnnotationProcessorConfiguration.class,
+        ShiroWebConfiguration.class,
+        ShiroRequestMappingConfig.class,
+})
 public class ShiroConfig {
 
     private SecurityManager securityManager;
     private final Map<String, String> resourceMap;
 
-    @Autowired
     public ShiroConfig(
-            @Qualifier("resourceServiceImpl") ResourceService resourceService){
+            @Qualifier("resourceServiceImpl") ResourceService resourceService) {
         this.resourceMap = resourceService.resourceMap();
     }
 
@@ -78,7 +85,6 @@ public class ShiroConfig {
         filterFactoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());
         filterFactoryBean.setLoginUrl("/auth/login/");
         filterFactoryBean.setGlobalFilters(globalFilters());
-
 //        filterFactoryBean.setSuccessUrl(successUrl);
 //        filterFactoryBean.setUnauthorizedUrl(unauthorizedUrl);
 //        filterFactoryBean.setFilters(filterMap);
@@ -92,7 +98,7 @@ public class ShiroConfig {
 
     @Bean
     public DefaultWebSecurityManager securityManager(
-            @Autowired AccountRealm accRealm) {
+            AccountRealm accRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(accRealm);
         securityManager.setCacheManager(cacheManager());
@@ -106,7 +112,7 @@ public class ShiroConfig {
 
     @Bean
     public ShiroEventBusBeanPostProcessor shiroEventBusAwareBeanPostProcessor(
-            @Autowired EventBus eventBus) {
+            EventBus eventBus) {
         return new ShiroEventBusBeanPostProcessor(eventBus);
     }
 }

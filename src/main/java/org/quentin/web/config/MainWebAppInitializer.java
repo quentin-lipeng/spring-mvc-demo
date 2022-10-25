@@ -5,18 +5,13 @@
  */
 package org.quentin.web.config;
 
-import org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration;
-import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
-import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.*;
-import java.util.EnumSet;
 
 //public class MainWebAppInitializer implements WebApplicationInitializer {
 //    @Override
@@ -49,17 +44,16 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
 
     // spring 配置 通过父类获取加载并注册
     // 这个相当于 applicationContext.xml
+    // TODO 此配置后以下配置类也需要使用@Configuration 但不加也可以用 具体未知
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class[]{
-                WebMvcConfig.class,
                 MybatisConfig.class,
                 SpringBeanConfig.class,
                 ShiroConfig.class,
-                ShiroAnnotationProcessorConfiguration.class,
-                ShiroWebConfiguration.class,
-                ShiroRequestMappingConfig.class,
                 FunctionalConfig.class,
+                CacheConfig.class,
+                WebMvcConfig.class,
         };
     }
 
@@ -71,7 +65,8 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
     // 后期可以把扫描注解和bean放在SpringBeanConfig中管理
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[0];
+        return new Class<?>[]{
+        };
     }
 
     @Override
@@ -86,9 +81,9 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
         // TODO 此配置暂时不可用 会报错No bean named 'delegatingFilterProxy' available
         // 此方法不用添加对应的映射路径
         // 参照<i>https://www.baeldung.com/spring-delegating-filter-proxy</i>
-        DelegatingFilterProxy shiroFilter = new DelegatingFilterProxy();
-        shiroFilter.setTargetFilterLifecycle(true);
-        shiroFilter.setBeanName("shiroFilterFactoryBean");
+//        DelegatingFilterProxy shiroFilter = new DelegatingFilterProxy();
+//        shiroFilter.setTargetFilterLifecycle(true);
+//        shiroFilter.setBeanName("shiroFilterFactoryBean");
 
         return new Filter[]{encodingFilter};
     }
@@ -105,9 +100,9 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
 //        // 下面注册filter可以参照 AbstractDispatcherServletInitializer.registerServletFilter()
-        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
-        shiroFilter.setInitParameter("targetFilterLifecycle", "true");
-        shiroFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
+//        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
+//        shiroFilter.setInitParameter("targetFilterLifecycle", "true");
+//        shiroFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
         super.onStartup(servletContext);
     }
 }

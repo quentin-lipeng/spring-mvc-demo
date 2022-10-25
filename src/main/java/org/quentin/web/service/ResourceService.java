@@ -11,4 +11,7 @@ public interface ResourceService {
     List<WebResource> resourceList();
 
     Map<String, String> resourceMap();
+
+    WebResource resource(Integer id);
+
 }

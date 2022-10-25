@@ -9,10 +9,7 @@ import org.apache.ibatis.annotations.*;
 import org.quentin.web.mapper.builder.WebResourceBuilder;
 import org.quentin.web.pojo.WebResource;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface WebResourceMapper {
 
@@ -30,4 +27,5 @@ public interface WebResourceMapper {
     @ResultMap("webResourceListMap")
     @Select("SELECT A.res_id, A.resource_name, A.resource_info FROM user_resource as A WHERE res_id = #{id}")
     WebResource resourceById(@Param("id") Integer id);
+
 }

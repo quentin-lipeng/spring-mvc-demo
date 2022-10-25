@@ -1,30 +1,23 @@
-/**
- * @author:quentin
- * @create: 2022-09-30 22:13
- * @Description: mybatis config
- */
+
 package org.quentin.web.config;
 
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
-import org.quentin.web.mapper.AccountMapper;
-import org.quentin.web.mapper.WebResourceMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
-/*
-暂时还没搞清楚这两个的作用
-因为使用了SqlSessionFactory进行mapper的注册
-下面的mapperScan对【no XML配置】 没有作用
+/**
+ * @author:quentin
+ * @create: 2022-09-30 22:13
+ * @Description: mybatis config
  */
+
 @MapperScan("org.quentin.web.mapper")
 //@PropertySource("classpath:jdbc.properties")
 @Configuration
@@ -34,19 +27,17 @@ public class MybatisConfig {
 //    @Value("${datasource.url}")
 //    private String url;
 //    @Value("${datasource.username}")
-//    private String user;
+//    private String username;
 //    @Value("${datasource.password}")
 //    private String password;
 //    @Value("${datasource.driverClassName}")
 //    private String driverClass;
 
-    @Resource
-    private DataSource dataSource;
-
     @Bean
-    public SqlSessionFactory sqlSessionFactory() throws Exception {
+    public SqlSessionFactory sqlSessionFactory(
+            DataSource dataSource) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(this.dataSource);
+        factoryBean.setDataSource(dataSource);
         // 为什么突然可以不使用用以下方法未知 大概原因是使用了MapperScan
 //        Configuration configuration = new Configuration();
 //        configuration.addMapper(AccountMapper.class);
@@ -56,8 +47,9 @@ public class MybatisConfig {
     }
 
     @Bean
-    public DataSourceTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(this.dataSource);
+    public DataSourceTransactionManager transactionManager(
+            DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean
