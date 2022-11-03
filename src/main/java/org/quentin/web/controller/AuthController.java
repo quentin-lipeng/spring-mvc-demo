@@ -2,7 +2,6 @@ package org.quentin.web.controller;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
-import org.quentin.web.service.impl.AccountServiceImpl;
 import org.quentin.web.shiro.MyNamePassToken;
 import org.quentin.web.dto.UserAccount;
 import org.quentin.web.pojo.RetMessage;
@@ -20,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**

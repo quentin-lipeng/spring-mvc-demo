@@ -32,6 +32,7 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
                 FunctionalConfig.class,
                 CacheConfig.class,
                 WebMvcConfig.class,
+                AopConfig.class
         };
     }
 

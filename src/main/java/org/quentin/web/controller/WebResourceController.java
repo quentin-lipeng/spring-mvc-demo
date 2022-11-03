@@ -21,20 +21,30 @@ import java.util.Map;
  * @Description:
  */
 @Controller
-// TODO 路径是否加上/ 斜杠
 @RequestMapping("/resource")
 public class WebResourceController {
     public static final Logger LOG = LoggerFactory.getLogger(WebResourceController.class);
 
     private final ResourceService resourceService;
 
+    /**
+     * 资源页面
+     *
+     * @author quentin
+     * @date 2022/11/2
+     */
     @GetMapping("")
     public String resourcePage() {
         return "resource";
     }
 
-    // 下面如果是多参可以写多个@Qualifier
-    // 其中Qualifier是可选的
+    /**
+     * 下面如果是多参可以写多个@Qualifier
+     * 其中Qualifier是可选的
+     *
+     * @author quentin
+     * @date 2022/11/2
+     */
     public WebResourceController(
             ResourceService resourceService) {
         this.resourceService = resourceService;

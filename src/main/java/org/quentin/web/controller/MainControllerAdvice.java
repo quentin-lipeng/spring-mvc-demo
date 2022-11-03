@@ -1,4 +1,3 @@
-
 package org.quentin.web.controller;
 
 import org.slf4j.Logger;
