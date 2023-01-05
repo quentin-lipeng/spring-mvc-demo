@@ -1,4 +1,3 @@
-
 package org.quentin.web.config;
 
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
@@ -18,7 +17,6 @@ import javax.sql.DataSource;
  * @create: 2022-09-30 22:13
  * @Description: mybatis config
  */
-
 @MapperScan(basePackages = "org.quentin.web.mapper")
 @ComponentScan("org.quentin.web.mapper")
 @Configuration
@@ -38,6 +36,7 @@ public class MybatisConfig {
         return new DataSourceTransactionManager(dataSource);
     }
 
+    // 因为使用形参的方法才能使Value生效 但使用此方法就必须通过bean的方式DI
     @Bean
     public DataSource dataSource(
             @Value("${datasource.driverClassName}") String driverClass,
@@ -46,12 +45,7 @@ public class MybatisConfig {
             @Value("${datasource.password}") String password
     ) {
         System.out.println("source = " + driverClass);
-        PooledDataSource dataSource = new PooledDataSource();
-        dataSource.setDriver(driverClass);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
+        return new PooledDataSource(driverClass, url, username, password);
     }
 
 }

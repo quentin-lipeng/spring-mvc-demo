@@ -16,7 +16,6 @@ import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.quentin.web.service.ResourceService;
 import org.quentin.web.shiro.AccountRealm;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -41,7 +40,7 @@ public class ShiroConfig {
     private final Map<String, String> resourceMap;
 
     public ShiroConfig(
-            @Qualifier("resourceServiceImpl") ResourceService resourceService) {
+            ResourceService resourceService) {
         this.resourceMap = resourceService.resourceMap();
     }
 
@@ -77,7 +76,6 @@ public class ShiroConfig {
     protected CacheManager cacheManager() {
         return new MemoryConstrainedCacheManager();
     }
-
 
     @Bean
     public SecurityManager securityManager(

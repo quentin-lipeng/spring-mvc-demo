@@ -25,12 +25,13 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Properties;
 
 /**
- * 如果想进一步配置spring mvc 可以继承DelegatingWebMvcConfiguration来代替实现WebMvcConfigurer
+ * 如果想进一步配置spring mvc
+ * 可以继承DelegatingWebMvcConfiguration来代替实现WebMvcConfigurer
  * 并去掉@EnableWebMvc 注解
  * EnableWebMvc导入了DelegatingWebMvcConfiguration
+ *
  * @author:quentin
  * @create: 2022-09-30 17:40
  * @Description: web config
@@ -58,20 +59,26 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new UserAccValidator();
     }
 
-    // 此方法为@Value注解工作 但加此bean的具体原因还没搞清楚
-    // 目前的作用解决了 配置LifecycleBeanPostProcessor后 就算其bean配置为static注入
-    // 依然解决不了@Value无法获取到值 但加此bean后解决
+    /**
+     * - 此方法为@Value注解工作 加此bean的原因是因为shiro使用了动态代理之类的东西
+     * 导致静态的注入Value失效
+     * 目前的作用解决了 配置LifecycleBeanPostProcessor后 就算其bean配置为static注入
+     * 依然解决不了@Value无法获取到值 但加此bean后解决
+     *
+     * @author quentin
+     * @date 2022/11/8
+     */
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer placeholderConfigurer = new PropertySourcesPlaceholderConfigurer();
 //        Properties properties = new Properties();
         //此方法配置的property 可以使用@Value获取
 //        properties.setProperty("user.lastname", "mike");
+//        placeholderConfigurer.setProperties(properties);
         // bring in some property values from a Properties file
         // 等同于@PropertySource("classpath:jdbc.properties")
         Resource resource = new ClassPathResource("jdbc.properties");
         placeholderConfigurer.setLocation(resource);
-//        placeholderConfigurer.setProperties(properties);
         return placeholderConfigurer;
     }
 
