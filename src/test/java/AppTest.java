@@ -22,6 +22,7 @@ public class AppTest {
         就会返回0 也就是InputStream默认方法返回的值
          */
         try (InputStream resource = this.getClass().getResourceAsStream("jdbc.properties")) {
+            assert resource != null;
             System.out.println("read before : " + resource.available());
             while ((i = resource.read()) != -1) {
                 System.out.print((char) i);
