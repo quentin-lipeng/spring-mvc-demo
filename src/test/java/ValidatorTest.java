@@ -1,4 +1,4 @@
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.quentin.web.dto.UserAccount;
 import org.quentin.web.validator.UserAccValidator;
 import org.springframework.validation.BindingResult;

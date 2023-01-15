@@ -10,7 +10,6 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
-                        // 'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: JSON.stringify({
                         username: document.getElementById('username').value,
@@ -20,11 +19,8 @@
                 return resp.json();
             }).then(data => {
                 if (data.status === "ok") {
-                    setTimeout(() => {
-                        window.location = "/home"
-                    }, 1000)
+                    window.location = "/home";
                 }
-
 
                 console.log(data);
             })

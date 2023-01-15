@@ -23,7 +23,6 @@ public class LogAdvice {
 
     @AfterReturning(pointcut = "org.quentin.web.aspectj.LogAspect.returnLog()", returning = "retVal")
     public void afterLog(Object retVal) {
-
         LOGGER.info("return value = " + retVal.getClass());
     }
 

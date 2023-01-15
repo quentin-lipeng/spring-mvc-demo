@@ -1,7 +1,4 @@
-import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.core.io.FileSystemResource;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +8,6 @@ import java.io.InputStream;
  * @create: 2022-10-03 23:17
  * @Description:
  */
-
 public class AppTest {
     @Test
     public void appTest() {

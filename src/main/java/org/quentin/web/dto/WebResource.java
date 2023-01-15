@@ -1,7 +1,5 @@
 package org.quentin.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 /**
  * @author:quentin
  * @create: 2022-10-10 20:56
@@ -12,6 +10,14 @@ public class WebResource {
     private String resourceId;
     private String resourceName;
     private String resourceInfo;
+
+    public WebResource() {
+    }
+
+    public WebResource(String resourceName, String resourceInfo) {
+        this.resourceName = resourceName;
+        this.resourceInfo = resourceInfo;
+    }
 
     public String getResourceId() {
         return resourceId;

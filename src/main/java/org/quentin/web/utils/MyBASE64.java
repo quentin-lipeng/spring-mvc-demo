@@ -1,8 +1,3 @@
-/**
- * @author:quentin
- * @create: 2022-10-04 22:41
- * @Description:
- */
 package org.quentin.web.utils;
 
 import sun.misc.BASE64Decoder;
@@ -10,12 +5,18 @@ import sun.misc.BASE64Encoder;
 
 import java.io.IOException;
 
+/**
+ * @author:quentin
+ * @create: 2022-10-04 22:41
+ * @Description:
+ */
 public class MyBASE64 {
     private final static BASE64Decoder decoder = new BASE64Decoder();
     private final static BASE64Encoder encoder = new BASE64Encoder();
 
     /**
      * 解密
+     *
      * @param Base64Code base64加密后的文字
      * @return
      * @author quentin
@@ -27,6 +28,7 @@ public class MyBASE64 {
 
     /**
      * 加密
+     *
      * @return 加密后的字符串
      * @author quentin
      * @date 2022/10/4

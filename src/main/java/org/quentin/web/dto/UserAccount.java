@@ -14,6 +14,11 @@ public class UserAccount {
     public UserAccount() {
     }
 
+    public UserAccount(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String getSalt() {
         return salt;
     }

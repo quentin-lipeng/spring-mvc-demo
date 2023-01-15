@@ -1,8 +1,3 @@
-/**
- * @author:quentin
- * @create: 2022-10-10 21:11
- * @Description:
- */
 package org.quentin.web.mapper;
 
 import org.apache.ibatis.annotations.*;
@@ -12,6 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author:quentin
+ * @create: 2022-10-10 21:11
+ * @Description:
+ */
 @Repository
 public interface WebResourceMapper {
 
@@ -23,11 +23,13 @@ public interface WebResourceMapper {
                     @Result(property = "resourceName", column = "resource_name"),
                     @Result(property = "resourceInfo", column = "resource_info"),
             })
-    @SelectProvider(type = WebResourceBuilder.class, method = "buildResourceList")
+    @SelectProvider(type = WebResourceBuilder.class)
     List<WebResource> webResourceList();
 
     @ResultMap("webResourceListMap")
     @Select("SELECT A.res_id, A.resource_name, A.resource_info FROM user_resource as A WHERE res_id = #{id}")
     WebResource resourceById(@Param("id") Integer id);
 
+    @Insert("INSERT INTO user_resource(resource_name, resource_info) value (#{resourceName}, #{resourceInfo})")
+    int insertResource(WebResource webResource);
 }

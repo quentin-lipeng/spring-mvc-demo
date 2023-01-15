@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,17 +27,6 @@ public class WebResourceController {
     private final ResourceService resourceService;
 
     /**
-     * 资源页面
-     *
-     * @author quentin
-     * @date 2022/11/2
-     */
-    @GetMapping("")
-    public String resourcePage() {
-        return "resource";
-    }
-
-    /**
      * 下面如果是多参可以写多个@Qualifier
      * 其中Qualifier是可选的
      *
@@ -48,6 +36,17 @@ public class WebResourceController {
     public WebResourceController(
             ResourceService resourceService) {
         this.resourceService = resourceService;
+    }
+
+    /**
+     * 资源页面
+     *
+     * @author quentin
+     * @date 2022/11/2
+     */
+    @GetMapping("")
+    public String resourcePage() {
+        return "resource";
     }
 
     @GetMapping("/list")
@@ -72,5 +71,21 @@ public class WebResourceController {
         return ResponseEntity.ok(resource);
     }
 
-    // TODO 待完善添加资源路径功能
+    @PostMapping("/add")
+    public ResponseEntity<String> addResource(
+            @RequestBody WebResource resource) {
+        boolean isAdded = false;
+        try {
+            isAdded = resourceService.addResource(resource);
+        } catch (Exception e) {
+            LOG.info("error===");
+            e.printStackTrace();
+        }
+        if (isAdded) {
+            return ResponseEntity.ok("success");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
+    }
+
+    // TODO 待完善更新资源路径功能
 }

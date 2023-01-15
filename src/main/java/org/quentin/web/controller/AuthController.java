@@ -59,6 +59,7 @@ public class AuthController {
     }
 
     // TODO 实现remember me
+    // TODO 写一个参数验证 类似于@Nullable
     @PostMapping("/login")
     // 可以直接返回对象并转换为json或其他类型 搭配jackson-databind使用
     @ResponseBody

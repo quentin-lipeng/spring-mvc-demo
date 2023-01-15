@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-
 /**
  * @author:quentin
  * @create: 2022-09-30 22:45
@@ -20,7 +19,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountMapper accMapper;
 
-    public AccountServiceImpl(AccountMapper accountMapper){
+    public AccountServiceImpl(AccountMapper accountMapper) {
         this.accMapper = accountMapper;
     }
 
@@ -53,7 +52,6 @@ public class AccountServiceImpl implements AccountService {
         String userId = MyBASE64.encryptBASE();
         int retInt = accMapper.insertAccount(
                 userId, account.getUsername(), encryptPass, salt);
-        logger.info("retInt = " + retInt);
         return retInt > 0;
     }
 }

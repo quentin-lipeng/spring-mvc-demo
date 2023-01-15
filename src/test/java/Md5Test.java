@@ -2,11 +2,10 @@ import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
-import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
-import org.junit.Test;
-import org.quentin.web.utils.MyEncrypt;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author:quentin
@@ -43,6 +42,6 @@ public class Md5Test {
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(
                 token.getPrincipal(), hashPass, ByteSource.Util.bytes(""), "A");
         boolean OK = credentialsMatcher.doCredentialsMatch(token, info);
-        System.out.println(OK);
+        Assertions.assertTrue(OK);
     }
 }

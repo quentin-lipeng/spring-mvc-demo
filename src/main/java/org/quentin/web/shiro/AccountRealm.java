@@ -46,7 +46,6 @@ public class AccountRealm extends AuthorizingRealm {
         logger.info("doGetAuthorizationInfo === ");
         // 获取当前用户
         logger.info("principals.getPrimaryPrincipal() = " + principals.getPrimaryPrincipal());
-        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        return authorizationInfo;
+        return new SimpleAuthorizationInfo();
     }
 }

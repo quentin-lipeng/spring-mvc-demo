@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
  * @Description: mybatis account mapper
  */
 @Repository
+// 有了MapperScan可以不用写@Mapper
+//@Mapper
 public interface AccountMapper {
     // 映射pojo对应的数据库属性
     @Results(id = "accountMap",

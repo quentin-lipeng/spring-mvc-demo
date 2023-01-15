@@ -1,4 +1,4 @@
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.quentin.web.utils.MyBASE64;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -22,7 +22,7 @@ public class UniqueIdTest {
 //            System.out.println(s);
 //            System.out.println(MyBASE64.decryptBASE(s));
 //        }
-        Timestamp ts=new Timestamp(System.currentTimeMillis());
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
         System.out.println(ts);
     }
 }

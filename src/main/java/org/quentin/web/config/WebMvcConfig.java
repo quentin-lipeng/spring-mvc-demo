@@ -10,6 +10,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -36,9 +37,10 @@ import java.util.List;
  * @create: 2022-09-30 17:40
  * @Description: web config
  */
-@EnableWebMvc
-@ComponentScan("org.quentin.web.controller")
 @Configuration
+@EnableWebMvc
+@ComponentScan({"org.quentin.web.controller", "org.quentin.web.service"})
+@EnableTransactionManagement
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
@@ -71,12 +73,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer placeholderConfigurer = new PropertySourcesPlaceholderConfigurer();
-//        Properties properties = new Properties();
-        //此方法配置的property 可以使用@Value获取
-//        properties.setProperty("user.lastname", "mike");
-//        placeholderConfigurer.setProperties(properties);
-        // bring in some property values from a Properties file
-        // 等同于@PropertySource("classpath:jdbc.properties")
+        /*
+        此方法配置的property 可以使用@Value获取
+        Properties properties = new Properties();
+        properties.setProperty("user.lastname", "mike");
+        placeholderConfigurer.setProperties(properties);
+        bring in some property values from a Properties file
+        等同于@PropertySource("classpath:jdbc.properties")
+         */
         Resource resource = new ClassPathResource("jdbc.properties");
         placeholderConfigurer.setLocation(resource);
         return placeholderConfigurer;

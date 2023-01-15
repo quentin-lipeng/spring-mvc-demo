@@ -37,21 +37,21 @@ import java.util.Map;
 })
 public class ShiroConfig {
 
-    private final Map<String, String> resourceMap;
+    private final ResourceService resourceService;
 
     public ShiroConfig(
             ResourceService resourceService) {
-        this.resourceMap = resourceService.resourceMap();
+        this.resourceService = resourceService;
     }
 
-    public ShiroFilterChainDefinition shiroFilterChainDefinition() {
+    /*public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
 
         // 通过数据库动态加载
-        chainDefinition.addPathDefinitions(this.resourceMap);
+        chainDefinition.addPathDefinitions(this.resourceService.resourceMap());
 
         return chainDefinition;
-    }
+    }*/
 
     public List<String> globalFilters() {
         return Collections.singletonList(DefaultFilter.invalidRequest.name());
@@ -62,12 +62,13 @@ public class ShiroConfig {
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
         filterFactoryBean.setSecurityManager(securityManager);
         //使用方法作为参数需要在@Configuration类下才可使用 否则使用上面的方法 通过成员方法注入 方式选其一
+        // 如果不在@Configuration下会造成循环依赖的问题
 //        filterFactoryBean.setSecurityManager(securityManager());
         // 通过向此处传入所有映射
-        filterFactoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());
+        filterFactoryBean.setFilterChainDefinitionMap(resourceService.getFilterChainMap());
         filterFactoryBean.setLoginUrl("/auth/login/");
         filterFactoryBean.setGlobalFilters(globalFilters());
-//        filterFactoryBean.setSuccessUrl(successUrl);
+        filterFactoryBean.setSuccessUrl("/home");
 //        filterFactoryBean.setUnauthorizedUrl(unauthorizedUrl);
 //        filterFactoryBean.setFilters(filterMap);
         return filterFactoryBean;
