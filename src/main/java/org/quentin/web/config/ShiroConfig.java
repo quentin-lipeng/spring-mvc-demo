@@ -1,15 +1,15 @@
 package org.quentin.web.config;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.event.EventBus;
 import org.apache.shiro.event.support.DefaultEventBus;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.ShiroEventBusBeanPostProcessor;
 import org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
-import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
 import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,39 +38,57 @@ import java.util.Map;
 })
 public class ShiroConfig {
 
-    private final ResourceService resourceService;
+    /**
+     * shiro过滤映射规则的map
+     * 后续可以通过向此map添加配置进行动态的过滤规则添加（但不一定需要这种功能）
+     */
+    private final Map<String, String> filterChainMap;
 
     public ShiroConfig(
             ResourceService resourceService) {
-        this.resourceService = resourceService;
+        filterChainMap = resourceService.resourceMap();
     }
 
-    /*public ShiroFilterChainDefinition shiroFilterChainDefinition() {
+    /*@Bean
+    public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
-
         // 通过数据库动态加载
-        chainDefinition.addPathDefinitions(this.resourceService.resourceMap());
-
+        chainDefinition.addPathDefinitions(this.filterChainMap);
         return chainDefinition;
     }*/
+
+    @Bean
+    public AccountRealm realm() {
+        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher("MD5");
+        AccountRealm accountRealm = new AccountRealm();
+        accountRealm.setCredentialsMatcher(credentialsMatcher);
+        return accountRealm;
+    }
+
+    /**
+     * Lifecycle and event form ShiroBeanConfiguration
+     */
+    @Bean
+    public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
 
     public List<String> globalFilters() {
         return Collections.singletonList(DefaultFilter.invalidRequest.name());
     }
 
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
-        filterFactoryBean.setSecurityManager(securityManager);
+        filterFactoryBean.setSecurityManager(securityManager());
         //使用方法作为参数需要在@Configuration类下才可使用 否则使用上面的方法 通过成员方法注入 方式选其一
         // 如果不在@Configuration下会造成循环依赖的问题
 //        filterFactoryBean.setSecurityManager(securityManager());
         // 通过向此处传入所有映射
-        filterFactoryBean.setFilterChainDefinitionMap(resourceService.getFilterChainMap());
-        filterFactoryBean.setLoginUrl("/auth/login/");
+        filterFactoryBean.setFilterChainDefinitionMap(this.filterChainMap);
         filterFactoryBean.setGlobalFilters(globalFilters());
+        filterFactoryBean.setLoginUrl("/auth/login/");
         filterFactoryBean.setSuccessUrl("/home");
-//        filterFactoryBean.setUnauthorizedUrl(unauthorizedUrl);
 //        filterFactoryBean.setFilters(filterMap);
         return filterFactoryBean;
     }
@@ -79,10 +98,9 @@ public class ShiroConfig {
     }
 
     @Bean
-    public SecurityManager securityManager(
-            AccountRealm accRealm) {
+    public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(accRealm);
+        securityManager.setRealm(realm());
         securityManager.setCacheManager(cacheManager());
         return securityManager;
     }
@@ -93,8 +111,8 @@ public class ShiroConfig {
     }
 
     @Bean
-    public ShiroEventBusBeanPostProcessor shiroEventBusAwareBeanPostProcessor(
-            EventBus eventBus) {
-        return new ShiroEventBusBeanPostProcessor(eventBus);
+    public ShiroEventBusBeanPostProcessor shiroEventBusAwareBeanPostProcessor() {
+        return new ShiroEventBusBeanPostProcessor(eventBus());
     }
+
 }

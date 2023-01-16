@@ -61,8 +61,4 @@ public class ResourceServiceImpl implements ResourceService {
         return retNum > 0;
     }
 
-    @Override
-    public Map<String, String> getFilterChainMap() {
-        return resourceMap();
-    }
 }
