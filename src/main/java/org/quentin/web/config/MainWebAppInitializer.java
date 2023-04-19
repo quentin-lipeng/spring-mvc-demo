@@ -1,5 +1,7 @@
 package org.quentin.web.config;
 
+import java.util.EnumSet;
+
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
@@ -80,9 +82,9 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
 //        // 下面注册filter可以参照 AbstractDispatcherServletInitializer.registerServletFilter()
-//        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
-//        shiroFilter.setInitParameter("targetFilterLifecycle", "true");
-//        shiroFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
+        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilterFactoryBean", DelegatingFilterProxy.class);
+        shiroFilter.setInitParameter("targetFilterLifecycle", "true");
+        shiroFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
         super.onStartup(servletContext);
     }
 

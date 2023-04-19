@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,17 +37,6 @@ import java.util.Map;
         ShiroRequestMappingConfig.class,
 })
 public class ShiroConfig {
-
-    /**
-     * shiro过滤映射规则的map
-     * 后续可以通过向此map添加配置进行动态的过滤规则添加（但不一定需要这种功能）
-     */
-    private final Map<String, String> filterChainMap;
-
-    public ShiroConfig(
-            ResourceService resourceService) {
-        filterChainMap = resourceService.resourceMap();
-    }
 
     /*@Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
@@ -84,7 +74,11 @@ public class ShiroConfig {
         // 如果不在@Configuration下会造成循环依赖的问题
 //        filterFactoryBean.setSecurityManager(securityManager());
         // 通过向此处传入所有映射
-        filterFactoryBean.setFilterChainDefinitionMap(this.filterChainMap);
+        Map<String, String> filterMap = new HashMap<>();
+        filterMap.put("/**", "authc");
+        // 登录发送表单时需要
+        filterMap.put("/auth/login", "anon");
+        filterFactoryBean.setFilterChainDefinitionMap(filterMap);
         filterFactoryBean.setGlobalFilters(globalFilters());
         filterFactoryBean.setLoginUrl("/auth/login/");
         filterFactoryBean.setSuccessUrl("/home");
