@@ -1,6 +1,7 @@
 package org.quentin.web.config;
 
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
 import org.quentin.web.validator.UserAccValidator;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -42,8 +43,8 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan({"org.quentin.web.controller", "org.quentin.web.service"})
-@EnableTransactionManagement
+@ComponentScan({"org.quentin.web.controller"})
+@Import({ShiroRequestMappingConfig.class})
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean

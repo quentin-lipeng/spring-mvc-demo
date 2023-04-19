@@ -10,11 +10,12 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.ShiroEventBusBeanPostProcessor;
 import org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
+import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
 import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.quentin.web.service.ResourceService;
 import org.quentin.web.shiro.AccountRealm;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,21 +31,24 @@ import java.util.Map;
  * @create: 2022-10-03 12:49
  * @Description: shiro config file
  */
-@Configuration(proxyBeanMethods = false)
+@Configuration
 @Import({
         ShiroAnnotationProcessorConfiguration.class,
         ShiroWebConfiguration.class,
-        ShiroRequestMappingConfig.class,
 })
 public class ShiroConfig {
 
-    /*@Bean
+    @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+        Map<String, String> filterChainMap = new HashMap<>();
+        filterChainMap.put("/**", "authc");
+        // 登录发送表单时需要
+        filterChainMap.put("/auth/login", "anon");
         // 通过数据库动态加载
-        chainDefinition.addPathDefinitions(this.filterChainMap);
+        chainDefinition.addPathDefinitions(filterChainMap);
         return chainDefinition;
-    }*/
+    }
 
     @Bean
     public AccountRealm realm() {
@@ -66,19 +70,16 @@ public class ShiroConfig {
         return Collections.singletonList(DefaultFilter.invalidRequest.name());
     }
 
-    @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    @Bean("shiroFilterFactoryBean")
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager, ShiroFilterChainDefinition filterChainDefinition) {
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
         filterFactoryBean.setSecurityManager(securityManager);
         //使用方法作为参数需要在@Configuration类下才可使用 否则使用上面的方法 通过成员方法注入 方式选其一
         // 如果不在@Configuration下会造成循环依赖的问题
 //        filterFactoryBean.setSecurityManager(securityManager());
         // 通过向此处传入所有映射
-        Map<String, String> filterMap = new HashMap<>();
-        filterMap.put("/**", "authc");
-        // 登录发送表单时需要
-        filterMap.put("/auth/login", "anon");
-        filterFactoryBean.setFilterChainDefinitionMap(filterMap);
+
+        filterFactoryBean.setFilterChainDefinitionMap(filterChainDefinition.getFilterChainMap());
         filterFactoryBean.setGlobalFilters(globalFilters());
         filterFactoryBean.setLoginUrl("/auth/login/");
         filterFactoryBean.setSuccessUrl("/home");
