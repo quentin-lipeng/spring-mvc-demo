@@ -8,7 +8,6 @@ import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.*;
-import java.util.EnumSet;
 
 /**
  * @author:quentin
@@ -18,13 +17,8 @@ import java.util.EnumSet;
 public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     /**
-     * 此处返回的配置类需要加@Configuration注解
-     * 但目前只知道因为有循环依赖问题所以才需要此注解
      * spring 配置 通过父类获取加载并注册
      * 这个相当于 applicationContext.xml
-     *
-     * @author quentin
-     * @date 2022/10/25
      */
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -48,7 +42,7 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
      * 因为只有一个DispatcherServlet 所以也可以把WebMvcConfig放在getRootConfigClasses()下
      * 参照 <a href="https://stackoverflow.com/questions/35258758/getservletconfigclasses-vs-getrootconfigclasses-when-extending-abstractannot">...</a>
      * 又因为shiroConfig中需要用到service类 所以需要弄到ComponentScan所以就把配置类放在一起
-     * 后期可以把扫描注解和bean放在SpringBeanConfig中管理
+     * 如果需要把mvc的层级分清楚 需要解决shiro的filterChain动态配置的问题（需要访问dao层获取过滤规则）
      *
      * @author quentin
      * @date 2022/10/25
@@ -83,7 +77,6 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
         return dispatcherServlet;
     }
 
-    // TODO: 2022/11/8 如果需要开启shiro的过滤 取消掉此方法内的注释
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
 //        // 下面注册filter可以参照 AbstractDispatcherServletInitializer.registerServletFilter()

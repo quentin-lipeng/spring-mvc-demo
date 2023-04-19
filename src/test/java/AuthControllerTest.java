@@ -30,8 +30,6 @@ public class AuthControllerTest {
     @Autowired
     AccountService accountService;
     @Autowired
-    UserAccValidator userAccValidator;
-    @Autowired
     WebApplicationContext wac;
     WebTestClient client;
 
@@ -39,7 +37,7 @@ public class AuthControllerTest {
     public void prepareController() {
         client =
                 MockMvcWebTestClient.bindToController(
-                                new AuthController(accountService, userAccValidator))
+                                new AuthController(accountService))
                         .build();
 //        client = MockMvcWebTestClient.bindToApplicationContext(this.wac).build();
     }

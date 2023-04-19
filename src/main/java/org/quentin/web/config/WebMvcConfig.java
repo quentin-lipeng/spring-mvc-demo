@@ -4,9 +4,11 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.quentin.web.validator.UserAccValidator;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.Ordered;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.http.CacheControl;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -25,6 +27,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -45,14 +48,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
     public FreeMarkerViewResolver freemarkerViewResolver() {
-        FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
+        // 因为在freeMarkerConfigurer()已经配置前缀 所以前缀为<"">
+        FreeMarkerViewResolver resolver = new FreeMarkerViewResolver("", ".ftl");
         resolver.setCache(true);
-        // 因为在freeMarkerConfigurer()已经配置前缀
-        resolver.setPrefix("");
-        resolver.setSuffix(".ftl");
         // 设置解析中文主要配置
         resolver.setContentType("text/html; charset=utf-8");
-        resolver.setOrder(0);
+        // order默认为LOWEST_PRECEDENCE
+        resolver.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return resolver;
     }
 
@@ -98,7 +100,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public FreeMarkerConfigurer freeMarkerConfigurer() {
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
         configurer.setDefaultEncoding("utf-8");
-        configurer.setTemplateLoaderPath("/WEB-INF/freemarker/");
+        // 对应了war包下路径
+        configurer.setTemplateLoaderPath("/WEB-INF/freemarker");
         return configurer;
     }
 
@@ -109,6 +112,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void configureViewResolvers(ViewResolverRegistry registry) {
         registry.viewResolver(freemarkerViewResolver());
         registry.enableContentNegotiation(new MappingJackson2JsonView());
+        // 其中只配置了suffix(.ftl) 也会检查FreeMarkerConfigurer的bean，也就是相当于配置了prefix
+        // 但其中的order无法设置
+//        registry.freeMarker();
     }
 
     @Override
@@ -116,9 +122,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     }
 
+    /**
+     * 默认会通过Header中Accept进行匹配
+     * 如果使用URL-based content type resolution,需要使用次方法配置, 例如后缀匹配
+     */
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        // 配置接收前端请求的数据类型 但目前不需要进行复写
+        // 配置接收前端请求的数据类型
 //        configurer.mediaType("json", MediaType.APPLICATION_JSON);
     }
 
@@ -142,12 +152,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     }
 
+    /**
+     * 此配置除了静态文件的映射配置 还有加密文件的解析配置，例如js进行md5加解密
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // registry.addResourceHandler("/resources/**").addResourceLocations("/public", "classpath:/static/")
+        // 上面代码的意思是让resources开始的资源在public或者classpath下的static寻找
+        // 可以作为一种映射 把 resources的资源映射到public
+        // 让url从static开始的资源从static下目录寻找
         registry.addResourceHandler("/static/**")
-                .addResourceLocations("classpath:/static/");
+                .addResourceLocations("classpath:/static/")
+                .setCacheControl(CacheControl.maxAge(Duration.ofDays(31)));
+        // 因为浏览器默认会请求favicon.ico所以直接映射 后面会对页面进行favicon设置
         registry.addResourceHandler("/favicon.ico")
-                .addResourceLocations("classpath:/static/favicon.ico");
+                .addResourceLocations("classpath:/static/favicon.ico")
+                .setCacheControl(CacheControl.maxAge(Duration.ofDays(31)));
     }
 
     @Override
@@ -197,10 +217,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-//    @Bean("globalValidator")
     public Validator getValidator() {
-//        return new UserAccValidator();
-        return null;
+        return new UserAccValidator();
     }
 
     @Override

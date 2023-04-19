@@ -13,7 +13,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
@@ -31,7 +30,8 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = "org.quentin.web.mapper")
 // 有了MapperScan ComponentScan可以不使用 但是idea会报错
 @ComponentScan({"org.quentin.web.mapper"})
-@Configuration
+// 相当于lite mode
+@Configuration(proxyBeanMethods = false)
 public class MybatisConfig {
 
     /**

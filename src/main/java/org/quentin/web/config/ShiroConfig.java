@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ import java.util.Map;
  * @create: 2022-10-03 12:49
  * @Description: shiro config file
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @Import({
         ShiroAnnotationProcessorConfiguration.class,
         ShiroWebConfiguration.class,
@@ -78,9 +77,9 @@ public class ShiroConfig {
     }
 
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean() {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
-        filterFactoryBean.setSecurityManager(securityManager());
+        filterFactoryBean.setSecurityManager(securityManager);
         //使用方法作为参数需要在@Configuration类下才可使用 否则使用上面的方法 通过成员方法注入 方式选其一
         // 如果不在@Configuration下会造成循环依赖的问题
 //        filterFactoryBean.setSecurityManager(securityManager());
@@ -98,9 +97,9 @@ public class ShiroConfig {
     }
 
     @Bean
-    public SecurityManager securityManager() {
+    public SecurityManager securityManager(AccountRealm realm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(realm());
+        securityManager.setRealm(realm);
         securityManager.setCacheManager(cacheManager());
         return securityManager;
     }
@@ -111,8 +110,8 @@ public class ShiroConfig {
     }
 
     @Bean
-    public ShiroEventBusBeanPostProcessor shiroEventBusAwareBeanPostProcessor() {
-        return new ShiroEventBusBeanPostProcessor(eventBus());
+    public ShiroEventBusBeanPostProcessor shiroEventBusAwareBeanPostProcessor(EventBus eventBus) {
+        return new ShiroEventBusBeanPostProcessor(eventBus);
     }
 
 }

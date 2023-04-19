@@ -22,6 +22,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * @author:quentin
@@ -36,21 +37,20 @@ public class AuthController {
      * 也可以使用@Resource(type = AccountServiceImpl.class)
      */
     private final AccountService accService;
-    private final Validator userAccValidator;
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(
-            AccountService accountService, UserAccValidator userAccValidator) {
+            AccountService accountService) {
         this.accService = accountService;
-        this.userAccValidator = userAccValidator;
     }
 
     // 此注册只在当前Controller可用
     @InitBinder
     private void initBinder(WebDataBinder binder) {
-        binder.setValidator(userAccValidator);
+//        binder.setValidator(userAccValidator);
+        binder.addValidators(new UserAccValidator());
     }
 
     @GetMapping("/login")
@@ -60,10 +60,17 @@ public class AuthController {
         return "login";
     }
 
-    // TODO 实现remember me
-    // TODO 写一个参数验证 类似于@Nullable
+    /**
+     * TODO 实现remember me
+     * todo 考虑几种情况 用户名密码空时 处理一下 ,有用户名没密码 也要一样处理 最关键的是两个都提供 思路捋一下
+     * <p>可以直接返回对象并转换为json或其他类型 搭配jackson-databind使用
+     * <p>参数验证有两种方法：
+     * - 使用javax.validation.Valid 使用要进行数据验证 需要使用@Valid注解形参 and Validated对象(作为形参)
+     * 例如： login(@RequestBody @Valid UserAccount account)
+     * - 使用spring的@Validated 配合BindingResult （还没试）
+     * <p>HttpEntity与@RequestBody类似 作为形参使用
+     */
     @PostMapping("/login")
-    // 可以直接返回对象并转换为json或其他类型 搭配jackson-databind使用
     @ResponseBody
     public ResponseEntity<RetMessage<String>> login(
             @RequestBody UserAccount account) {

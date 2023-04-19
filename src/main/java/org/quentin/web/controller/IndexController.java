@@ -20,8 +20,7 @@ public class IndexController {
     /**
      * redirect 用于url之间的重定向 前端会从一个url跳转到另一个url
      * forward 用于在服务端从一个servlet到另一个 前端不会有url的变化
-     * @author quentin
-     * @date 2022/11/2
+     * 写此映射方法是为了使用redirect
      */
     @GetMapping("")
     public String welcome() {

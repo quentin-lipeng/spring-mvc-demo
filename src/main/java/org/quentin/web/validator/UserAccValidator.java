@@ -1,8 +1,3 @@
-/**
- * @author:quentin
- * @create: 2022-10-13 17:21
- * @Description:
- */
 package org.quentin.web.validator;
 
 import org.quentin.web.dto.UserAccount;
@@ -10,6 +5,11 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * @author:quentin
+ * @create: 2022-10-13 17:21
+ * @Description:
+ */
 public class UserAccValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {

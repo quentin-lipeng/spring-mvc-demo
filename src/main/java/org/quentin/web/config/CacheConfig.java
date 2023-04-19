@@ -14,7 +14,7 @@ import java.util.Collections;
 /**
  * @author quentin
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 // 开启缓存注解
 @EnableCaching
 public class CacheConfig {
