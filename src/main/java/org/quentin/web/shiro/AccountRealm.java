@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 
 public class AccountRealm extends AuthorizingRealm {
 
-    public static final Logger logger = LoggerFactory.getLogger(AccountRealm.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountRealm.class);
 
     @Resource
     private AccountMapper accountMapper;

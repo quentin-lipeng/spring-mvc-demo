@@ -12,13 +12,13 @@ import javax.servlet.*;
 /**
  * @author:quentin
  * @create: 2022-09-30 17:42
- * @Description: init
  */
 public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	/**
 	 * spring 配置 通过父类获取加载并注册
 	 * 这个相当于 applicationContext.xml
+	 * spring will load root config first then servlet
 	 */
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
@@ -28,7 +28,7 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
 				AopConfig.class,
 				MybatisConfig.class,
 				FunctionalConfig.class,
-				ShiroConfig.class
+				ShiroConfig.class,
 		};
 	}
 
@@ -64,7 +64,11 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
 		DelegatingFilterProxy shiroFilter = new DelegatingFilterProxy();
 		shiroFilter.setTargetBeanName("shiroFilterFactoryBean");
 		shiroFilter.setTargetFilterLifecycle(true);
-		return new Filter[] {new CharacterEncodingFilter("utf-8"), shiroFilter};
+		CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter("utf-8");
+		return new Filter[] {
+				encodingFilter,
+				shiroFilter
+		};
 	}
 
 	// 返回后通过AbstractDispatcherServletInitializer获取并加载
