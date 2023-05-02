@@ -1,20 +1,17 @@
 package org.quentin.web.config;
 
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.apache.shiro.spring.web.ShiroUrlPathHelper;
 import org.apache.shiro.spring.web.config.ShiroRequestMappingConfig;
 import org.quentin.web.validator.UserAccValidator;
 
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.Ordered;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.CacheControl;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -28,6 +25,7 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+import org.springframework.web.util.UrlPathHelper;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -55,7 +53,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Bean
 	public FreeMarkerViewResolver freemarkerViewResolver() {
-		// 因为在freeMarkerConfigurer()已经配置前缀 所以前缀为<"">
+		// 因为在freeMarkerConfigurer()已经配置前缀 所以前缀为("")
 		FreeMarkerViewResolver resolver = new FreeMarkerViewResolver("", ".ftl");
 		resolver.setCache(true);
 		// 设置解析中文主要配置
@@ -124,9 +122,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //        registry.freeMarker();
 	}
 
+	/**
+	 * @see UrlPathHelper
+	 */
 	@Override
 	public void configurePathMatch(PathMatchConfigurer pathMatchConfigurer) {
-
+//		ShiroUrlPathHelper urlPathHelper = new ShiroUrlPathHelper();
+//		urlPathHelper.setRemoveSemicolonContent(false);
+//		pathMatchConfigurer.setUrlPathHelper(urlPathHelper);
 	}
 
 	/**

@@ -53,7 +53,7 @@ public class AuthController {
         binder.addValidators(new UserAccValidator());
     }
 
-    @GetMapping("/login")
+    @GetMapping({"/login"})
     public String login(HttpServletRequest request, Model model) {
         // request.getParameter 获取前端url显式参数
 //        String id = request.getParameter("id");

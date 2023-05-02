@@ -24,8 +24,8 @@ import org.apache.shiro.spring.web.ShiroUrlPathHelper;
 import org.apache.shiro.spring.web.config.AbstractShiroWebConfiguration;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
-import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.servlet.Cookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.quentin.web.shiro.AccountRealm;
 
 import org.springframework.context.annotation.Bean;
@@ -33,7 +33,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +48,9 @@ import java.util.Map;
 		ShiroConfig.ShiroWebConfig.class
 })
 public class ShiroConfig {
+
+	public ShiroConfig() {
+	}
 
 	@Bean
 	public AccountRealm realm() {
@@ -66,23 +68,13 @@ public class ShiroConfig {
 		return new LifecycleBeanPostProcessor();
 	}
 
-	protected List<String> globalFilters() {
-		return Collections.singletonList(DefaultFilter.invalidRequest.name());
-	}
-
 	@DependsOn({"securityManager", "shiroFilterChainDefinition"})
 	@Bean
 	public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager, ShiroFilterChainDefinition filterChainDefinition) {
 		ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
 		filterFactoryBean.setSecurityManager(securityManager);
-		//使用方法作为参数需要在@Configuration类下才可使用 否则使用上面的方法 通过成员方法注入 方式选其一
-		// 如果不在@Configuration下会造成循环依赖的问题
-//        filterFactoryBean.setSecurityManager(securityManager());
-		// 通过向此处传入所有映射
+		// 通过向此处传入所有映射规则
 		filterFactoryBean.setFilterChainDefinitionMap(filterChainDefinition.getFilterChainMap());
-//        filterFactoryBean.setFilterChainDefinitionMap(filterChainDefinition.getFilterChainMap());
-//        filterFactoryBean.setFilterChainDefinitionMap(filterMap);
-		filterFactoryBean.setGlobalFilters(globalFilters());
 		filterFactoryBean.setLoginUrl("/auth/login");
 		filterFactoryBean.setSuccessUrl("/home");
 //        filterFactoryBean.setFilters(filterMap);
@@ -172,7 +164,11 @@ public class ShiroConfig {
 		@Bean
 		@Override
 		protected SessionManager sessionManager() {
-			return super.sessionManager();
+			DefaultWebSessionManager webSessionManager = new DefaultWebSessionManager();
+			// this will not rewrite jsessionid in url with ';'
+			webSessionManager.setSessionIdUrlRewritingEnabled(false);
+			return webSessionManager;
+//			return super.sessionManager();
 		}
 
 		/**
