@@ -47,11 +47,6 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Bean
-	public ShiroRequestMappingConfig shiroRequestMappingConfig(RequestMappingHandlerMapping requestMappingHandlerMapping) {
-		return new ShiroRequestMappingConfig(requestMappingHandlerMapping);
-	}
-
-	@Bean
 	public FreeMarkerViewResolver freemarkerViewResolver() {
 		// 因为在freeMarkerConfigurer()已经配置前缀 所以前缀为("")
 		FreeMarkerViewResolver resolver = new FreeMarkerViewResolver("", ".ftl");
@@ -124,12 +119,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	/**
 	 * @see UrlPathHelper
+	 * requestMappingHandlerMapping.setUrlPathHelper also can do this
 	 */
 	@Override
 	public void configurePathMatch(PathMatchConfigurer pathMatchConfigurer) {
-//		ShiroUrlPathHelper urlPathHelper = new ShiroUrlPathHelper();
+		ShiroUrlPathHelper urlPathHelper = new ShiroUrlPathHelper();
 //		urlPathHelper.setRemoveSemicolonContent(false);
-//		pathMatchConfigurer.setUrlPathHelper(urlPathHelper);
+		pathMatchConfigurer.setUrlPathHelper(urlPathHelper);
 	}
 
 	/**

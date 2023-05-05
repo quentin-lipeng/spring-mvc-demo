@@ -49,9 +49,6 @@ import java.util.Map;
 })
 public class ShiroConfig {
 
-	public ShiroConfig() {
-	}
-
 	@Bean
 	public AccountRealm realm() {
 		HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher("MD5");
@@ -161,14 +158,15 @@ public class ShiroConfig {
 			return super.authenticator();
 		}
 
+		/**
+		 * it relates jsessionid cookie
+		 */
 		@Bean
 		@Override
 		protected SessionManager sessionManager() {
-			DefaultWebSessionManager webSessionManager = new DefaultWebSessionManager();
-			// this will not rewrite jsessionid in url with ';'
-			webSessionManager.setSessionIdUrlRewritingEnabled(false);
-			return webSessionManager;
-//			return super.sessionManager();
+			// see parent method of it
+			useNativeSessionManager=true;
+			return super.sessionManager();
 		}
 
 		/**
@@ -193,6 +191,7 @@ public class ShiroConfig {
 		}
 
 		@Bean
+//		@Conditional()
 		@Override
 		protected ShiroUrlPathHelper shiroUrlPathHelper() {
 			return super.shiroUrlPathHelper();

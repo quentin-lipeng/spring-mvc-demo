@@ -89,6 +89,6 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
 	@Override
 	protected void customizeRegistration(ServletRegistration.Dynamic registration) {
 		// 开启日志 似乎和把log等级调到debug差不多
-//        registration.setInitParameter("enableLoggingRequestDetails", "true");
+        registration.setInitParameter("enableLoggingRequestDetails", "true");
 	}
 }
