@@ -2,7 +2,6 @@ package org.quentin.web.controller;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
-import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.quentin.web.shiro.MyNamePassToken;
 import org.quentin.web.dto.UserAccount;
 import org.quentin.web.pojo.RetMessage;
@@ -10,19 +9,16 @@ import org.quentin.web.service.AccountService;
 import org.quentin.web.validator.UserAccValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 /**
  * @author:quentin

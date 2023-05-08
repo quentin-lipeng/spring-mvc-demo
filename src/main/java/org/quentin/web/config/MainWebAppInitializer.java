@@ -1,17 +1,21 @@
 package org.quentin.web.config;
 
+import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import org.springframework.web.servlet.support.AbstractDispatcherServletInitializer;
 
 import javax.servlet.*;
 
 /**
  * @author:quentin
  * @create: 2022-09-30 17:42
+ *
+ * @see WebApplicationInitializer
  */
 public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -41,8 +45,6 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
 	 * 因为只有一个DispatcherServlet 所以也可以把WebMvcConfig放在getRootConfigClasses()下
 	 * 参照 <a href="https://stackoverflow.com/questions/35258758/getservletconfigclasses-vs-getrootconfigclasses-when-extending-abstractannot">...</a>
 	 *
-	 * @author quentin
-	 * @date 2022/10/25
 	 */
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
@@ -56,7 +58,6 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
 		return new String[] {"/"};
 	}
 
-	// AbstractDispatcherServletInitializer 获取后注册
 	@Override
 	protected Filter[] getServletFilters() {
 		// 此方法不用添加对应的映射路径
@@ -71,7 +72,9 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
 		};
 	}
 
-	// 返回后通过AbstractDispatcherServletInitializer获取并加载
+	/**
+	 * 返回后通过AbstractDispatcherServletInitializer获取并加载
+	 */
 	@Override
 	protected FrameworkServlet createDispatcherServlet(WebApplicationContext servletAppContext) {
 		DispatcherServlet dispatcherServlet = new DispatcherServlet(servletAppContext);
@@ -80,9 +83,11 @@ public class MainWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
 		return dispatcherServlet;
 	}
 
+	/**
+	 * check {@link AbstractDispatcherServletInitializer#registerServletFilter(ServletContext, Filter)}
+	 */
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
-//        // 下面注册filter可以参照 AbstractDispatcherServletInitializer.registerServletFilter()
 		super.onStartup(servletContext);
 	}
 
